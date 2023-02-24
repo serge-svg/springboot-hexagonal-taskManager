@@ -41,7 +41,7 @@ public class UserUseCase implements UserInputPort{
     }
     
     @Override
-    public TMUser create(String national_id, String name, String email) {        
+    public boolean create(String national_id, String name, String email) {        
         TMUser user = TMUser.builder()
             .id(UUID.randomUUID().toString())
             .national_id(national_id)
@@ -53,14 +53,14 @@ public class UserUseCase implements UserInputPort{
     }
 
     @Override
-    public void delete(String id) {
+    public boolean deleteById(String id) {
         TMUser tmUser = getById(id);    
         if (null != tmUser && !tmUser.getNational_id().isEmpty()) {  
             String national_id = tmUser.getNational_id();
             taskUseCase.getByUserId(national_id).stream()
-                       .forEach((task) -> taskUseCase.delete(task.getId()));
+                       .forEach((task) -> taskUseCase.deleteById(task.getId()));
         }
-        entityRepository.delete(id, TMUser.class);
+        return entityRepository.deleteById(id, TMUser.class);
     }
     
 }

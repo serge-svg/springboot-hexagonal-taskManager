@@ -40,12 +40,12 @@ public class TaskAPI {
     }
 
     @PostMapping(value = "create", produces = MediaType.APPLICATION_JSON_VALUE)
-    public TMTask create(@RequestParam String userId, @RequestParam String title, @RequestParam String description) {
+    public boolean create(@RequestParam String userId, @RequestParam String title, @RequestParam String description) {
         return taskInputPort.create(userId, title, description);
     }
 
     @DeleteMapping(value = "delete")
-    public void delete(@RequestParam String id) {
-        taskInputPort.delete(id);
+    public boolean deleteById(@RequestParam String id) {
+        return taskInputPort.deleteById(id);
     }
 }

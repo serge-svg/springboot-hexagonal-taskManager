@@ -10,7 +10,7 @@ public interface TaskInputPort {
     public List<TMTask> getAll();
     public TMTask getById(String id);
     public List<TMTask> getByUserId(String userId);
-    public TMTask create(String user_id, String title, String description);
-    public void delete(String id);
+    public boolean create(String user_id, String title, String description);
+    public boolean deleteById(String id);
     
 }

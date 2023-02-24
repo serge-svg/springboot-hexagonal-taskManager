@@ -71,7 +71,7 @@ public class PostgresRepository implements EntityRepository {
     }
 
     @Override
-    public <T> boolean delete(String id, Class<T> clazz) {
+    public <T> boolean deleteById(String id, Class<T> clazz) {
         String sql = "DELETE FROM " + clazz.getSimpleName() + " WHERE id = ?";
         Object[] args = new Object[] { id };
 
@@ -79,7 +79,7 @@ public class PostgresRepository implements EntityRepository {
     }
 
     @Override
-    public <T> T save(T reg) {
+    public <T> boolean save(T reg) {
         Field[] entityFields = reg.getClass().getDeclaredFields();
         String[] fields = new String[entityFields.length];
         Object[] fieldValues = new Object[entityFields.length];
@@ -103,9 +103,7 @@ public class PostgresRepository implements EntityRepository {
                 .append(" VALUES ")
                 .append("(").append(String.join(",", Collections.nCopies(fields.length, "?"))).append(")");
 
-        jdbcTemplate.update(sql.toString(), fieldValues);
-
-        return reg;
+        return jdbcTemplate.update(sql.toString(), fieldValues) == 1;
     }
 
     private class LombokRowMapper<T> implements RowMapper<T> {
