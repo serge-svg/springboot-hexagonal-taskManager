@@ -46,13 +46,13 @@ public class UserAPI {
     }
 
     @PostMapping(value = "create", produces=MediaType.APPLICATION_JSON_VALUE)
-    public TMUser create(@RequestParam String nationalId, @RequestParam String name, @RequestParam String email) {
+    public boolean create(@RequestParam String nationalId, @RequestParam String name, @RequestParam String email) {
         return userInputPort.create(nationalId, name, email);
     }
 
     @DeleteMapping(value = "delete")
-    public void delete(@RequestParam String id) {        
-        userInputPort.delete(id);
+    public boolean deleteById(@RequestParam String id) {        
+        return userInputPort.deleteById(id);
     }
     
 }

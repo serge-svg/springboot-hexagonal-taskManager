@@ -35,7 +35,7 @@ public class TaskUseCase implements TaskInputPort{
     }
 
     @Override
-    public TMTask create(String user_id, String title, String description) {        
+    public boolean create(String user_id, String title, String description) {        
         TMTask task = TMTask.builder()
             .id(UUID.randomUUID().toString())
             .user_id(user_id)
@@ -47,8 +47,8 @@ public class TaskUseCase implements TaskInputPort{
     }
 
     @Override
-    public void delete(String id) {
-        entityRepository.delete(id, TMTask.class);
+    public boolean deleteById(String id) {
+        return entityRepository.deleteById(id, TMTask.class);
     }
 
 }
