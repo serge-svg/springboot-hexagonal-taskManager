@@ -1,5 +1,6 @@
 package svg.taskmanager.infra.adapters.output;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,9 +36,6 @@ public class PostgresRepositoryTest {
 
     @BeforeEach
     void setUp() {        
-        postgresRepository.deleteAll(TMTask.class);
-        postgresRepository.deleteAll(TMUser.class);
-
         user = TMUser.builder().id(ID)
                                .national_id(NATIONAL_ID)
                                .name(NAME)
@@ -51,6 +49,12 @@ public class PostgresRepositoryTest {
                                .build();
 
         }
+
+    @AfterEach
+    void cleanEnvironment(){
+        postgresRepository.deleteAll(TMTask.class);
+        postgresRepository.deleteAll(TMUser.class);
+    }
 
     @Test
     void should_find_all_created_usesr() {
