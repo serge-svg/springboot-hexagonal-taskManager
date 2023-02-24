@@ -10,4 +10,5 @@ public interface EntityRepository {
     public <T> List<T> getByName(String id, Class<T> clazz);      
     public <T> boolean save(T reg);
     public <T> boolean deleteById(String id, Class<T> clazz);
+    public <T> boolean deleteAll(Class<T> clazz);
 }

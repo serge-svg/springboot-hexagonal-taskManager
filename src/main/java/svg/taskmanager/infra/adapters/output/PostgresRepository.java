@@ -79,6 +79,13 @@ public class PostgresRepository implements EntityRepository {
     }
 
     @Override
+    public <T> boolean deleteAll(Class<T> clazz) {
+        String sql = "DELETE FROM " + clazz.getSimpleName() + ";";
+        Object[] args = new Object[] {};
+        return jdbcTemplate.update(sql, args) >= 0;
+    }
+
+    @Override
     public <T> boolean save(T reg) {
         Field[] entityFields = reg.getClass().getDeclaredFields();
         String[] fields = new String[entityFields.length];
