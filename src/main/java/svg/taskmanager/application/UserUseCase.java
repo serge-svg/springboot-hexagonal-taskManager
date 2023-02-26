@@ -41,7 +41,7 @@ public class UserUseCase implements UserInputPort{
     }
     
     @Override
-    public boolean create(String national_id, String name, String email) {        
+    public boolean create(String national_id, String name, String email) {
         TMUser user = TMUser.builder()
             .id(UUID.randomUUID().toString())
             .national_id(national_id)
