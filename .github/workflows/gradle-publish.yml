@@ -23,7 +23,7 @@ jobs:
       uses: cloudposse/github-action-docker-compose-test-run@main
       with:
         file: docker-compose.yml
-        service: app
+        service: taskManager
         command: test/unit-tests.sh          
 
     - name: Validate Gradle wrapper
