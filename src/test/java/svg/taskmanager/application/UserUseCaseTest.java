@@ -1,7 +1,6 @@
 package svg.taskmanager.application;
 
 import java.util.Collections;
-import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -47,7 +46,7 @@ public class UserUseCaseTest {
     void getAll() {
         doReturn(Collections.singletonList(user)).when(postgresRepository).getAll(TMUser.class);
         
-        List<TMUser> users = userUseCase.getAll();
+        var users = userUseCase.getAll();
         assertThat(users).as("List of all users").asList()
                 .extracting("id")
                 .contains(ID)
@@ -80,7 +79,7 @@ public class UserUseCaseTest {
     void getByName() {
         doReturn(Collections.singletonList(user)).when(postgresRepository).getByName(NAME, TMUser.class);
 
-        List<TMUser> users =  userUseCase.getByName(NAME);
+        var users =  userUseCase.getByName(NAME);
         assertThat(users).as("List of users").asList()
                 .extracting("id")
                 .contains(ID)
