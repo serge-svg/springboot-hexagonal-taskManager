@@ -1,6 +1,5 @@
 package svg.taskmanager.infra.adapters.output;
 
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,23 +7,45 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.ActiveProfiles;
-
-import svg.taskmanager.domain.TMUser;
-import svg.taskmanager.infra.ports.output.EntityRepository;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
+import org.testcontainers.containers.PostgreSQLContainer;
+import org.testcontainers.containers.wait.strategy.Wait;
+import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
 import svg.taskmanager.domain.TMTask;
+import svg.taskmanager.domain.TMUser;
+
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import java.util.List;
-
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
-public class PostgresRepositoryTest {
+@Testcontainers
+class PostgresRepositoryTest {
     @Autowired
     PostgresRepository postgresRepository;
+
+    @Container
+    static final PostgreSQLContainer<?> postgreSQL = (PostgreSQLContainer<?>) new PostgreSQLContainer(
+            "postgres:9.6.12")
+            .withDatabaseName("taskManagerdb")
+            .withUsername("postgres")
+            .withPassword("postgres")
+            .withExposedPorts(5432)
+            .waitingFor(Wait.forListeningPort());
+
     @Autowired
     JdbcTemplate jdbcTemplate;
+
+    @DynamicPropertySource
+    static void postgreSQLProperties(DynamicPropertyRegistry registry) {
+        registry.add("spring.datasource.url", postgreSQL::getJdbcUrl);
+        registry.add("spring.datasource.username", postgreSQL::getUsername);
+        registry.add("spring.datasource.password", postgreSQL::getPassword);
+    }
 
     private TMUser user;
     private final String ID = "001";
@@ -38,23 +59,23 @@ public class PostgresRepositoryTest {
     private final String DESCRIPTION = "Task1 for user1...";
 
     @BeforeEach
-    void setUp() {        
+    void setUp() {
         postgresRepository.deleteAll(TMTask.class);
         postgresRepository.deleteAll(TMUser.class);
 
         user = TMUser.builder().id(ID)
-                               .national_id(NATIONAL_ID)
-                               .name(NAME)
-                               .email(EMAIL)
-                               .build();
+                .national_id(NATIONAL_ID)
+                .name(NAME)
+                .email(EMAIL)
+                .build();
 
         task = TMTask.builder().id(ID)
-                               .user_id(USER_ID)
-                               .title(TITLE)
-                               .description(DESCRIPTION)
-                               .build();
+                .user_id(USER_ID)
+                .title(TITLE)
+                .description(DESCRIPTION)
+                .build();
 
-        }
+    }
 
     @Test
     void should_created_one_user() {
@@ -80,10 +101,10 @@ public class PostgresRepositoryTest {
         postgresRepository.save(user);
 
         TMUser user2 = TMUser.builder().id("002")
-                               .national_id(NATIONAL_ID)
-                               .name("User2")
-                               .email("user2@hotmail")
-                               .build();        
+                .national_id(NATIONAL_ID)
+                .name("User2")
+                .email("user2@hotmail")
+                .build();
 
         assertThrows(DuplicateKeyException.class, () -> postgresRepository.save(user2));
     }
@@ -93,10 +114,10 @@ public class PostgresRepositoryTest {
         postgresRepository.save(user);
 
         TMUser user2 = TMUser.builder().id("002")
-                               .national_id("11122233B")
-                               .name("User2")
-                               .email(EMAIL)
-                               .build();        
+                .national_id("11122233B")
+                .name("User2")
+                .email(EMAIL)
+                .build();
 
         assertThrows(DuplicateKeyException.class, () -> postgresRepository.save(user2));
     }
@@ -156,7 +177,7 @@ public class PostgresRepositoryTest {
         TMTask savedTask = postgresRepository.getById(ID, TMTask.class);
 
         assertThat(savedTask).isNull();
-    }    
+    }
 
     @Test
     void should_deleted_all_tasks() {
@@ -167,7 +188,7 @@ public class PostgresRepositoryTest {
 
         assertThat(savedTask).isNull();
     }
-    
+
     @Test
     void should_deleted_all_users() {
         postgresRepository.save(user);
@@ -175,5 +196,5 @@ public class PostgresRepositoryTest {
         TMUser savedUser = postgresRepository.getById(ID, TMUser.class);
 
         assertThat(savedUser).isNull();
-    }    
+    }
 }
