@@ -1,6 +1,5 @@
 package svg.taskmanager.infra.adapters.output;
 
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,9 +7,14 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
+import org.testcontainers.containers.PostgreSQLContainer;
+import org.testcontainers.containers.wait.strategy.Wait;
+import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
 
 import svg.taskmanager.domain.TMUser;
-import svg.taskmanager.infra.ports.output.EntityRepository;
 import svg.taskmanager.domain.TMTask;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -20,11 +24,29 @@ import java.util.List;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
+@Testcontainers
 public class PostgresRepositoryTest {
     @Autowired
-    PostgresRepository postgresRepository;
-    @Autowired
     JdbcTemplate jdbcTemplate;
+
+    @Autowired
+    PostgresRepository postgresRepository;
+
+    @Container
+    static final PostgreSQLContainer<?> postgreSQL = (PostgreSQLContainer<?>) new PostgreSQLContainer(
+            "postgres:9.6.12")
+            .withDatabaseName("taskManagerdb")
+            .withUsername("postgres")
+            .withPassword("postgres")
+            .withExposedPorts(5432)
+            .waitingFor(Wait.forListeningPort());
+
+    @DynamicPropertySource
+    static void postgreSQLProperties(DynamicPropertyRegistry registry) {
+        registry.add("spring.datasource.url", postgreSQL::getJdbcUrl);
+        registry.add("spring.datasource.username", postgreSQL::getUsername);
+        registry.add("spring.datasource.password", postgreSQL::getPassword);
+    }
 
     private TMUser user;
     private final String ID = "001";
@@ -43,16 +65,16 @@ public class PostgresRepositoryTest {
         postgresRepository.deleteAll(TMUser.class);
 
         user = TMUser.builder().id(ID)
-                               .national_id(NATIONAL_ID)
-                               .name(NAME)
-                               .email(EMAIL)
-                               .build();
+                    .national_id(NATIONAL_ID)
+                    .name(NAME)
+                    .email(EMAIL)
+                    .build();
 
         task = TMTask.builder().id(ID)
-                               .user_id(USER_ID)
-                               .title(TITLE)
-                               .description(DESCRIPTION)
-                               .build();
+                    .user_id(USER_ID)
+                    .title(TITLE)
+                    .description(DESCRIPTION)
+                    .build();
 
         }
 
