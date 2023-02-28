@@ -5,6 +5,7 @@ import java.util.Collections;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
@@ -13,6 +14,9 @@ import svg.taskmanager.infra.adapters.output.PostgresRepository;
 import svg.taskmanager.infra.ports.output.EntityRepository;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.verify;
 
@@ -95,6 +99,19 @@ public class UserUseCaseTest {
         userUseCase.deleteById(ID);
 
         verify(postgresRepository).deleteById(ID, TMUser.class);
+    }
+
+    @Test
+    void create() {
+        doReturn(true).when(postgresRepository).save(any());
+
+        userUseCase.create(NATIONAL_ID, NAME, EMAIL);
+        ArgumentCaptor<TMUser> userCaptor = ArgumentCaptor.forClass(TMUser.class);     
+        verify(postgresRepository).save(userCaptor.capture());
+
+        assertEquals(userCaptor.getValue().getNational_id(), NATIONAL_ID);
+        assertEquals(userCaptor.getValue().getName(), NAME);
+        assertEquals(userCaptor.getValue().getEmail(), EMAIL);
     }
 
 }

@@ -17,6 +17,7 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 import svg.taskmanager.domain.TMTask;
 import svg.taskmanager.domain.TMUser;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -25,7 +26,6 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
 @Testcontainers
-
 public class PostgresRepositoryTest {
     @Autowired
     JdbcTemplate jdbcTemplate;
@@ -81,7 +81,7 @@ public class PostgresRepositoryTest {
     @Test
     void should_created_one_user() {
         postgresRepository.save(user);
-
+        
         var savedUsers = postgresRepository.getAll(TMUser.class);
 
         assertThat(savedUsers.size()).isEqualTo(1);
@@ -167,17 +167,17 @@ public class PostgresRepositoryTest {
     @Test
     void should_not_find_a_deleted_user() {
         postgresRepository.deleteById(ID, TMUser.class);
-        TMUser savedUser = postgresRepository.getById(ID, TMUser.class);
 
-        assertThat(savedUser).isNull();
+        assertThrows(IllegalArgumentException.class, 
+                                () -> postgresRepository.getById(ID, TMUser.class));
     }
 
     @Test
     void should_not_find_a_deleted_task() {
         postgresRepository.deleteById(ID, TMTask.class);
-        TMTask savedTask = postgresRepository.getById(ID, TMTask.class);
 
-        assertThat(savedTask).isNull();
+        assertThrows(IllegalArgumentException.class, 
+                                () -> postgresRepository.getById(ID, TMTask.class));
     }    
 
     @Test
@@ -185,17 +185,16 @@ public class PostgresRepositoryTest {
         postgresRepository.save(user);
         postgresRepository.save(task);
         postgresRepository.deleteAll(TMTask.class);
-        TMTask savedTask = postgresRepository.getById(ID, TMTask.class);
 
-        assertThat(savedTask).isNull();
+        assertThrows(IllegalArgumentException.class, 
+                                () -> postgresRepository.getById(ID, TMTask.class));
     }
     
     @Test
     void should_deleted_all_users() {
         postgresRepository.save(user);
         postgresRepository.deleteAll(TMUser.class);
-        TMUser savedUser = postgresRepository.getById(ID, TMUser.class);
-
-        assertThat(savedUser).isNull();
+        assertThrows(IllegalArgumentException.class, 
+                                () -> postgresRepository.getById(ID, TMUser.class));
     }    
 }
