@@ -13,6 +13,7 @@ import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.containers.wait.strategy.Wait;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
+
 import svg.taskmanager.domain.TMTask;
 import svg.taskmanager.domain.TMUser;
 
@@ -24,21 +25,22 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
 @Testcontainers
-class PostgresRepositoryTest {
+
+public class PostgresRepositoryTest {
+    @Autowired
+    JdbcTemplate jdbcTemplate;
+
     @Autowired
     PostgresRepository postgresRepository;
 
     @Container
     static final PostgreSQLContainer<?> postgreSQL = (PostgreSQLContainer<?>) new PostgreSQLContainer(
-            "postgres:9.6.12")
+            "postgres:13.2-alpine")
             .withDatabaseName("taskManagerdb")
             .withUsername("postgres")
             .withPassword("postgres")
             .withExposedPorts(5432)
             .waitingFor(Wait.forListeningPort());
-
-    @Autowired
-    JdbcTemplate jdbcTemplate;
 
     @DynamicPropertySource
     static void postgreSQLProperties(DynamicPropertyRegistry registry) {
@@ -64,17 +66,16 @@ class PostgresRepositoryTest {
         postgresRepository.deleteAll(TMUser.class);
 
         user = TMUser.builder().id(ID)
-                .national_id(NATIONAL_ID)
-                .name(NAME)
-                .email(EMAIL)
-                .build();
+                    .national_id(NATIONAL_ID)
+                    .name(NAME)
+                    .email(EMAIL)
+                    .build();
 
         task = TMTask.builder().id(ID)
-                .user_id(USER_ID)
-                .title(TITLE)
-                .description(DESCRIPTION)
-                .build();
-
+                    .user_id(USER_ID)
+                    .title(TITLE)
+                    .description(DESCRIPTION)
+                    .build();
     }
 
     @Test
