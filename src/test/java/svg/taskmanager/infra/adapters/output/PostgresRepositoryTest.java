@@ -34,7 +34,7 @@ public class PostgresRepositoryTest {
 
     @Container
     static final PostgreSQLContainer<?> postgreSQL = (PostgreSQLContainer<?>) new PostgreSQLContainer(
-            "postgres:9.6.12")
+            "postgres:13.2-alpine")
             .withDatabaseName("taskManagerdb")
             .withUsername("postgres")
             .withPassword("postgres")
