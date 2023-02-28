@@ -14,17 +14,18 @@ import org.testcontainers.containers.wait.strategy.Wait;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
-import svg.taskmanager.domain.TMUser;
 import svg.taskmanager.domain.TMTask;
+import svg.taskmanager.domain.TMUser;
+
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import java.util.List;
-
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
 @Testcontainers
+
 public class PostgresRepositoryTest {
     @Autowired
     JdbcTemplate jdbcTemplate;
@@ -60,7 +61,7 @@ public class PostgresRepositoryTest {
     private final String DESCRIPTION = "Task1 for user1...";
 
     @BeforeEach
-    void setUp() {        
+    void setUp() {
         postgresRepository.deleteAll(TMTask.class);
         postgresRepository.deleteAll(TMUser.class);
 
@@ -75,8 +76,7 @@ public class PostgresRepositoryTest {
                     .title(TITLE)
                     .description(DESCRIPTION)
                     .build();
-
-        }
+    }
 
     @Test
     void should_created_one_user() {
@@ -102,10 +102,10 @@ public class PostgresRepositoryTest {
         postgresRepository.save(user);
 
         TMUser user2 = TMUser.builder().id("002")
-                               .national_id(NATIONAL_ID)
-                               .name("User2")
-                               .email("user2@hotmail")
-                               .build();        
+                .national_id(NATIONAL_ID)
+                .name("User2")
+                .email("user2@hotmail")
+                .build();
 
         assertThrows(DuplicateKeyException.class, () -> postgresRepository.save(user2));
     }
@@ -115,10 +115,10 @@ public class PostgresRepositoryTest {
         postgresRepository.save(user);
 
         TMUser user2 = TMUser.builder().id("002")
-                               .national_id("11122233B")
-                               .name("User2")
-                               .email(EMAIL)
-                               .build();        
+                .national_id("11122233B")
+                .name("User2")
+                .email(EMAIL)
+                .build();
 
         assertThrows(DuplicateKeyException.class, () -> postgresRepository.save(user2));
     }
@@ -178,7 +178,7 @@ public class PostgresRepositoryTest {
         TMTask savedTask = postgresRepository.getById(ID, TMTask.class);
 
         assertThat(savedTask).isNull();
-    }    
+    }
 
     @Test
     void should_deleted_all_tasks() {
@@ -189,7 +189,7 @@ public class PostgresRepositoryTest {
 
         assertThat(savedTask).isNull();
     }
-    
+
     @Test
     void should_deleted_all_users() {
         postgresRepository.save(user);
@@ -197,5 +197,5 @@ public class PostgresRepositoryTest {
         TMUser savedUser = postgresRepository.getById(ID, TMUser.class);
 
         assertThat(savedUser).isNull();
-    }    
+    }
 }
