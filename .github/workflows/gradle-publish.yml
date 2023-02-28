@@ -9,7 +9,10 @@ on:
 jobs:
   build:
   
-    runs-on: ubuntu-latest
+    runs-on: ${matrix.os}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
   
     steps:    
     - name: Checkout
@@ -26,3 +29,6 @@ jobs:
 
     - name: Build with Gradle
       run: ./gradlew build
+
+publish:
+  - needs: 
