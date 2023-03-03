@@ -17,7 +17,6 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 import svg.taskmanager.domain.TMTask;
 import svg.taskmanager.domain.TMUser;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -66,7 +65,7 @@ public class PostgresRepositoryTest {
         postgresRepository.deleteAll(TMUser.class);
 
         user = TMUser.builder().id(ID)
-                    .national_id(NATIONAL_ID)
+                    .nationalId(NATIONAL_ID)
                     .name(NAME)
                     .email(EMAIL)
                     .build();
@@ -102,7 +101,7 @@ public class PostgresRepositoryTest {
         postgresRepository.save(user);
 
         TMUser user2 = TMUser.builder().id("002")
-                               .national_id(NATIONAL_ID)
+                               .nationalId(NATIONAL_ID)
                                .name("User2")
                                .email("user2@hotmail")
                                .build();        
@@ -115,7 +114,7 @@ public class PostgresRepositoryTest {
         postgresRepository.save(user);
 
         TMUser user2 = TMUser.builder().id("002")
-                               .national_id("11122233B")
+                               .nationalId("11122233B")
                                .name("User2")
                                .email(EMAIL)
                                .build();        

@@ -41,7 +41,7 @@ public class UserUseCaseTest {
     void setUp() {
         userUseCase =  new UserUseCase(postgresRepository, taskUseCase);
         user = TMUser.builder().id(ID)
-                               .national_id(NATIONAL_ID)
+                               .nationalId(NATIONAL_ID)
                                .name(NAME)
                                .email(EMAIL).build();
     }
@@ -109,7 +109,7 @@ public class UserUseCaseTest {
         ArgumentCaptor<TMUser> userCaptor = ArgumentCaptor.forClass(TMUser.class);     
         verify(postgresRepository).save(userCaptor.capture());
 
-        assertEquals(userCaptor.getValue().getNational_id(), NATIONAL_ID);
+        assertEquals(userCaptor.getValue().getNationalId(), NATIONAL_ID);
         assertEquals(userCaptor.getValue().getName(), NAME);
         assertEquals(userCaptor.getValue().getEmail(), EMAIL);
     }
