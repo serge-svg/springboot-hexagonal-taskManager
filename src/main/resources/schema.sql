@@ -15,7 +15,11 @@ CREATE TABLE IF NOT EXISTS TMTask
     title VARCHAR ( 100 ) NOT NULL,
     description VARCHAR ( 500 ) NOT NULL,
     userId VARCHAR ( 10 ) NOT NULL REFERENCES TMUser(nationalId)
+
 );
+
+DELETE FROM TMUser;
+INSERT INTO TMUser (id, nationalid, name, email) VALUES (6, 'Spain','Xavi Hernandes','xavi@fcbarca.com');
 
 /*
     postgres command line examples:

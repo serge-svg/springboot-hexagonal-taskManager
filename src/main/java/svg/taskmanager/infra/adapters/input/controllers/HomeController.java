@@ -39,5 +39,3 @@ public class HomeController {
         userUseCase.deleteById(id);
         return "redirect:/home";
     }
-
-}
