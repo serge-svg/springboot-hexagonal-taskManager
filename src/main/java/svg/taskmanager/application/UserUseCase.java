@@ -1,7 +1,6 @@
 package svg.taskmanager.application;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.UUID;
 
 import org.springframework.stereotype.Component;
