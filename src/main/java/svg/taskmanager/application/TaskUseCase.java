@@ -35,10 +35,10 @@ public class TaskUseCase implements TaskInputPort{
     }
 
     @Override
-    public boolean create(String user_id, String title, String description) {        
+    public boolean create(String userId, String title, String description) {        
         TMTask task = TMTask.builder()
             .id(UUID.randomUUID().toString())
-            .user_id(user_id)
+            .userId(userId)
             .title(title)
             .description(description)
             .build();

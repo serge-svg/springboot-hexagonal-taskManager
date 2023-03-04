@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class TMTask {
     private String id;
-    private String user_id;
+    private String userId;
     private String title;
     private String description;
 }

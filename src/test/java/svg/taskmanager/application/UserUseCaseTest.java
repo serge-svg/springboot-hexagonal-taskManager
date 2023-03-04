@@ -15,7 +15,6 @@ import svg.taskmanager.infra.ports.output.EntityRepository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.verify;
@@ -64,8 +63,8 @@ public class UserUseCaseTest {
         doReturn(user).when(postgresRepository).getById(ID, TMUser.class);
 
         user = userUseCase.getById(ID);
-        assertThat(user).as("User should have an id, national_id, name and email")
-                .extracting("id", "national_id", "name", "email")
+        assertThat(user).as("User should have an id, nationalId, name and email")
+                .extracting("id", "nationalId", "name", "email")
                 .isNotNull();
     }
     
@@ -74,8 +73,8 @@ public class UserUseCaseTest {
         doReturn(user).when(postgresRepository).getByNationalId(NATIONAL_ID, TMUser.class);
 
         user =  userUseCase.getByNationalId(NATIONAL_ID);
-        assertThat(user).as("User should have an id, national_id, name and email")
-        .extracting("id", "national_id", "name", "email")
+        assertThat(user).as("User should have an id, nationalId, name and email")
+        .extracting("id", "nationalId", "name", "email")
         .isNotNull();
     }
 

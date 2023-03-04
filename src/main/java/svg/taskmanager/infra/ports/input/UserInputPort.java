@@ -10,7 +10,7 @@ public interface UserInputPort {
     public TMUser getById(String id);
     public TMUser getByNationalId(String nationalId);
     public List<TMUser> getByName(String name);
-    public boolean create(String national_id, String name, String email);
+    public boolean create(String nationalId, String name, String email);
     public boolean deleteById(String id);
     
 }

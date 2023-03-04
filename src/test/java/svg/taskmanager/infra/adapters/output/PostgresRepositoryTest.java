@@ -71,7 +71,7 @@ public class PostgresRepositoryTest {
                     .build();
 
         task = TMTask.builder().id(ID)
-                    .user_id(USER_ID)
+                    .userId(USER_ID)
                     .title(TITLE)
                     .description(DESCRIPTION)
                     .build();
@@ -139,7 +139,7 @@ public class PostgresRepositoryTest {
     }
 
     @Test
-    void should_find_a_user_by_its_national_id() {
+    void should_find_a_user_by_its_nationalId() {
         postgresRepository.save(user);
         TMUser userFound = postgresRepository.getByNationalId(NATIONAL_ID, TMUser.class);
 
@@ -155,7 +155,7 @@ public class PostgresRepositoryTest {
     }
 
     @Test
-    void should_find_tasks_by_user_id() {
+    void should_find_tasks_by_userId() {
         postgresRepository.save(user);
         postgresRepository.save(task);
         List<TMTask> tasksFound = postgresRepository.getByUserId(USER_ID, TMTask.class);
