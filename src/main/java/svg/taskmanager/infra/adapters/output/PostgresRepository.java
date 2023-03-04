@@ -36,18 +36,20 @@ public class PostgresRepository implements EntityRepository {
         if (!list.isEmpty()) {
             return list.get(0);
         }
-        return null;
+
+        throw new IllegalArgumentException("This id has not been found:" + id);
     }
 
     @Override
     public <T> T getByNationalId(String nationalId, Class<T> clazz) {
-        List<T> list = jdbcTemplate.query("SELECT * FROM " + clazz.getSimpleName() + " WHERE national_id = ?",
+        List<T> list = jdbcTemplate.query("SELECT * FROM " + clazz.getSimpleName() + " WHERE nationalId = ?",
                 new LombokRowMapper<T>(clazz), nationalId);
 
         if (!list.isEmpty()){
             return list.get(0);
         }
-        return null;
+        
+        throw new IllegalArgumentException("This national id has not been found:" + nationalId);
     }
 
     public <T> List<T> getByName(String name, Class<T> clazz) {
@@ -57,17 +59,24 @@ public class PostgresRepository implements EntityRepository {
         if (!list.isEmpty()){
             return list;
         }
-        return null;
+
+        throw new IllegalArgumentException("There are not results for this name:" + name);
     }
 
     public <T> List<T> getByUserId(String userId, Class<T> clazz) {
-        List<T> list = jdbcTemplate.query("SELECT * FROM " + clazz.getSimpleName() + " WHERE user_id = ? ",
+        List<T> list = jdbcTemplate.query("SELECT * FROM " + clazz.getSimpleName() + " WHERE userId = ? ",
                 new LombokRowMapper<T>(clazz), userId);
 
         if (!list.isEmpty()){
             return list;
         }
-        return null;
+
+        throw new IllegalArgumentException("This user id has not been found:" + userId);
+        //return Collections.emptyList();
+        //FIXME
+        //throw new IllegalArgumentException("This user id has not been found:" + userId);
+        //When the user doesn't have task an exception is thrown
+        //Should all user have tasks?
     }
 
     @Override

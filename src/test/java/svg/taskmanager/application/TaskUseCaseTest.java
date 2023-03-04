@@ -6,15 +6,18 @@ import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import svg.taskmanager.domain.TMTask;
 import svg.taskmanager.infra.adapters.output.PostgresRepository;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.verify;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertEquals;
 
 @ExtendWith(MockitoExtension.class)
 public class TaskUseCaseTest {
@@ -32,7 +35,7 @@ public class TaskUseCaseTest {
     void setUp() {
         taskUseCase =  new TaskUseCase(postgresRepository);
         task = TMTask.builder().id(ID)
-                               .user_id(USER_ID)
+                               .userId(USER_ID)
                                .title(TITLE)
                                .description(DESCRIPTION)
                                .build();
@@ -57,7 +60,7 @@ public class TaskUseCaseTest {
 
         task = taskUseCase.getById(ID);
         assertThat(task).as("Task should have an id, user_id, title and description")
-                .extracting("id", "user_id", "title", "description")
+                .extracting("id", "userId", "title", "description")
                 .isNotNull();
     }    
 
@@ -81,6 +84,19 @@ public class TaskUseCaseTest {
         taskUseCase.deleteById(ID);
 
         verify(postgresRepository).deleteById(ID, TMTask.class);
+    }
+
+    @Test
+    void create() {
+        doReturn(true).when(postgresRepository).save(any());
+
+        taskUseCase.create(USER_ID, TITLE, DESCRIPTION);
+        ArgumentCaptor<TMTask> taskCaptor =  ArgumentCaptor.forClass(TMTask.class);
+        verify(postgresRepository).save(taskCaptor.capture());
+
+        assertEquals(taskCaptor.getValue().getUserId(), USER_ID);
+        assertEquals(taskCaptor.getValue().getTitle(), TITLE);
+        assertEquals(taskCaptor.getValue().getDescription(), DESCRIPTION);        
     }
 
 }

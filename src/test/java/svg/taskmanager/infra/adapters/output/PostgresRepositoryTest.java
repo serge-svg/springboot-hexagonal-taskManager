@@ -25,7 +25,6 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
 @Testcontainers
-
 public class PostgresRepositoryTest {
     @Autowired
     JdbcTemplate jdbcTemplate;
@@ -66,13 +65,13 @@ public class PostgresRepositoryTest {
         postgresRepository.deleteAll(TMUser.class);
 
         user = TMUser.builder().id(ID)
-                    .national_id(NATIONAL_ID)
+                    .nationalId(NATIONAL_ID)
                     .name(NAME)
                     .email(EMAIL)
                     .build();
 
         task = TMTask.builder().id(ID)
-                    .user_id(USER_ID)
+                    .userId(USER_ID)
                     .title(TITLE)
                     .description(DESCRIPTION)
                     .build();
@@ -81,7 +80,7 @@ public class PostgresRepositoryTest {
     @Test
     void should_created_one_user() {
         postgresRepository.save(user);
-
+        
         var savedUsers = postgresRepository.getAll(TMUser.class);
 
         assertThat(savedUsers.size()).isEqualTo(1);
@@ -102,7 +101,7 @@ public class PostgresRepositoryTest {
         postgresRepository.save(user);
 
         TMUser user2 = TMUser.builder().id("002")
-                               .national_id(NATIONAL_ID)
+                               .nationalId(NATIONAL_ID)
                                .name("User2")
                                .email("user2@hotmail")
                                .build();        
@@ -115,7 +114,7 @@ public class PostgresRepositoryTest {
         postgresRepository.save(user);
 
         TMUser user2 = TMUser.builder().id("002")
-                               .national_id("11122233B")
+                               .nationalId("11122233B")
                                .name("User2")
                                .email(EMAIL)
                                .build();        
@@ -140,7 +139,7 @@ public class PostgresRepositoryTest {
     }
 
     @Test
-    void should_find_a_user_by_its_national_id() {
+    void should_find_a_user_by_its_nationalId() {
         postgresRepository.save(user);
         TMUser userFound = postgresRepository.getByNationalId(NATIONAL_ID, TMUser.class);
 
@@ -156,7 +155,7 @@ public class PostgresRepositoryTest {
     }
 
     @Test
-    void should_find_tasks_by_user_id() {
+    void should_find_tasks_by_userId() {
         postgresRepository.save(user);
         postgresRepository.save(task);
         List<TMTask> tasksFound = postgresRepository.getByUserId(USER_ID, TMTask.class);
@@ -167,17 +166,17 @@ public class PostgresRepositoryTest {
     @Test
     void should_not_find_a_deleted_user() {
         postgresRepository.deleteById(ID, TMUser.class);
-        TMUser savedUser = postgresRepository.getById(ID, TMUser.class);
 
-        assertThat(savedUser).isNull();
+        assertThrows(IllegalArgumentException.class, 
+                                () -> postgresRepository.getById(ID, TMUser.class));
     }
 
     @Test
     void should_not_find_a_deleted_task() {
         postgresRepository.deleteById(ID, TMTask.class);
-        TMTask savedTask = postgresRepository.getById(ID, TMTask.class);
 
-        assertThat(savedTask).isNull();
+        assertThrows(IllegalArgumentException.class, 
+                                () -> postgresRepository.getById(ID, TMTask.class));
     }    
 
     @Test
@@ -185,17 +184,16 @@ public class PostgresRepositoryTest {
         postgresRepository.save(user);
         postgresRepository.save(task);
         postgresRepository.deleteAll(TMTask.class);
-        TMTask savedTask = postgresRepository.getById(ID, TMTask.class);
 
-        assertThat(savedTask).isNull();
+        assertThrows(IllegalArgumentException.class, 
+                                () -> postgresRepository.getById(ID, TMTask.class));
     }
     
     @Test
     void should_deleted_all_users() {
         postgresRepository.save(user);
         postgresRepository.deleteAll(TMUser.class);
-        TMUser savedUser = postgresRepository.getById(ID, TMUser.class);
-
-        assertThat(savedUser).isNull();
+        assertThrows(IllegalArgumentException.class, 
+                                () -> postgresRepository.getById(ID, TMUser.class));
     }    
 }

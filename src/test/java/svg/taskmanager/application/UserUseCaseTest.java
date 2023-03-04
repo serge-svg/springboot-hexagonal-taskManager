@@ -5,6 +5,7 @@ import java.util.Collections;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
@@ -13,6 +14,8 @@ import svg.taskmanager.infra.adapters.output.PostgresRepository;
 import svg.taskmanager.infra.ports.output.EntityRepository;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.verify;
 
@@ -37,7 +40,7 @@ public class UserUseCaseTest {
     void setUp() {
         userUseCase =  new UserUseCase(postgresRepository, taskUseCase);
         user = TMUser.builder().id(ID)
-                               .national_id(NATIONAL_ID)
+                               .nationalId(NATIONAL_ID)
                                .name(NAME)
                                .email(EMAIL).build();
     }
@@ -60,8 +63,8 @@ public class UserUseCaseTest {
         doReturn(user).when(postgresRepository).getById(ID, TMUser.class);
 
         user = userUseCase.getById(ID);
-        assertThat(user).as("User should have an id, national_id, name and email")
-                .extracting("id", "national_id", "name", "email")
+        assertThat(user).as("User should have an id, nationalId, name and email")
+                .extracting("id", "nationalId", "name", "email")
                 .isNotNull();
     }
     
@@ -70,8 +73,8 @@ public class UserUseCaseTest {
         doReturn(user).when(postgresRepository).getByNationalId(NATIONAL_ID, TMUser.class);
 
         user =  userUseCase.getByNationalId(NATIONAL_ID);
-        assertThat(user).as("User should have an id, national_id, name and email")
-        .extracting("id", "national_id", "name", "email")
+        assertThat(user).as("User should have an id, nationalId, name and email")
+        .extracting("id", "nationalId", "name", "email")
         .isNotNull();
     }
 
@@ -95,6 +98,19 @@ public class UserUseCaseTest {
         userUseCase.deleteById(ID);
 
         verify(postgresRepository).deleteById(ID, TMUser.class);
+    }
+
+    @Test
+    void create() {
+        doReturn(true).when(postgresRepository).save(any());
+
+        userUseCase.create(NATIONAL_ID, NAME, EMAIL);
+        ArgumentCaptor<TMUser> userCaptor = ArgumentCaptor.forClass(TMUser.class);     
+        verify(postgresRepository).save(userCaptor.capture());
+
+        assertEquals(userCaptor.getValue().getNationalId(), NATIONAL_ID);
+        assertEquals(userCaptor.getValue().getName(), NAME);
+        assertEquals(userCaptor.getValue().getEmail(), EMAIL);
     }
 
 }
