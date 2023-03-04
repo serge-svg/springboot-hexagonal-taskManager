@@ -42,7 +42,7 @@ public class PostgresRepository implements EntityRepository {
 
     @Override
     public <T> T getByNationalId(String nationalId, Class<T> clazz) {
-        List<T> list = jdbcTemplate.query("SELECT * FROM " + clazz.getSimpleName() + " WHERE national_id = ?",
+        List<T> list = jdbcTemplate.query("SELECT * FROM " + clazz.getSimpleName() + " WHERE nationalId = ?",
                 new LombokRowMapper<T>(clazz), nationalId);
 
         if (!list.isEmpty()){
@@ -64,7 +64,7 @@ public class PostgresRepository implements EntityRepository {
     }
 
     public <T> List<T> getByUserId(String userId, Class<T> clazz) {
-        List<T> list = jdbcTemplate.query("SELECT * FROM " + clazz.getSimpleName() + " WHERE user_id = ? ",
+        List<T> list = jdbcTemplate.query("SELECT * FROM " + clazz.getSimpleName() + " WHERE userId = ? ",
                 new LombokRowMapper<T>(clazz), userId);
 
         if (!list.isEmpty()){
@@ -72,6 +72,11 @@ public class PostgresRepository implements EntityRepository {
         }
 
         throw new IllegalArgumentException("This user id has not been found:" + userId);
+        //return Collections.emptyList();
+        //FIXME
+        //throw new IllegalArgumentException("This user id has not been found:" + userId);
+        //When the user doesn't have task an exception is thrown
+        //Should all user have tasks?
     }
 
     @Override

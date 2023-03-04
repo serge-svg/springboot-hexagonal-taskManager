@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class TMUser {
     private String id;
-    private String national_id;
+    private String nationalId;
     private String name;
     private String email;
 }

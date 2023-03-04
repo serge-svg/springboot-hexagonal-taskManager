@@ -35,7 +35,7 @@ public class TaskUseCaseTest {
     void setUp() {
         taskUseCase =  new TaskUseCase(postgresRepository);
         task = TMTask.builder().id(ID)
-                               .user_id(USER_ID)
+                               .userId(USER_ID)
                                .title(TITLE)
                                .description(DESCRIPTION)
                                .build();
@@ -60,7 +60,7 @@ public class TaskUseCaseTest {
 
         task = taskUseCase.getById(ID);
         assertThat(task).as("Task should have an id, user_id, title and description")
-                .extracting("id", "user_id", "title", "description")
+                .extracting("id", "userId", "title", "description")
                 .isNotNull();
     }    
 
@@ -94,7 +94,7 @@ public class TaskUseCaseTest {
         ArgumentCaptor<TMTask> taskCaptor =  ArgumentCaptor.forClass(TMTask.class);
         verify(postgresRepository).save(taskCaptor.capture());
 
-        assertEquals(taskCaptor.getValue().getUser_id(), USER_ID);
+        assertEquals(taskCaptor.getValue().getUserId(), USER_ID);
         assertEquals(taskCaptor.getValue().getTitle(), TITLE);
         assertEquals(taskCaptor.getValue().getDescription(), DESCRIPTION);        
     }
