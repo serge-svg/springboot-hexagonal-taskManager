@@ -1,7 +1,5 @@
 package svg.taskmanager.infra.adapters.input.controllers;
 
-import java.util.Optional;
-
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -9,42 +7,55 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import svg.taskmanager.infra.ports.input.TaskInputPort;
+
 @Controller
 @RequestMapping("/tasks")
 public class TaskController {
-/*
-	private UserService userService;
 
-	public TaskController(UserService userService) {
+	private TaskInputPort taskInputPort;
+
+
+	public TaskController(TaskInputPort taskInputPort) {
 		super();
-		this.userService = userService;
+		this.taskInputPort = taskInputPort;
 	}
 
+	@GetMapping("/listOfTasks")
+	public String getAllTasks(Model model) {
+		model.addAttribute("tasks", taskInputPort.getAll());
+		return "listOfTasks";		
+	}	
+
 	@GetMapping("/listOfTasksByUser")
-	public String findByUser(Model model, @RequestParam String id) {
-		model.addAttribute("tasks", userService.findAllTasksByUser(id));
-		model.addAttribute("id", id);
+	public String getByUserId(Model model, @RequestParam String userId) {
+		model.addAttribute("tasks", taskInputPort.getByUserId(userId));
+		model.addAttribute("userId", userId);
 		return "listOfTasks";		
 	}	
 	
-	@GetMapping("/addTask")
-	public String addForm(Model model, @RequestParam String userID) {
-		Task task = new Task();
-		Optional<User> oUser = userService.findById(userID);
-		if (oUser.isPresent()) {
-			task.setUser(oUser.get());
-		}
-		model.addAttribute("task", task);
+	@GetMapping("/addTaskForm")
+	public String addForm(Model model, String userId) {
+		model.addAttribute("userId", userId);
 		return "addTaskForm";
 	}
 	
 	@PostMapping("/insertTask")
-	public String insert(Model model, Task task) {
-		userService.insert(task);
-		model.addAttribute("tasks", userService.findAllTasksByUser(task.getUser().getId()));
+	public String insert(Model model, @RequestParam String userId, @RequestParam String title, @RequestParam String description) {
+		taskInputPort.create(userId, title, description);
+		model.addAttribute("userId", userId);
+		model.addAttribute("tasks", taskInputPort.getByUserId(userId));
 		return "listOfTasks";	
 	}
-	
+
+	@GetMapping("/deleteTask")
+	public String deleteById(Model model, @RequestParam String id, @RequestParam String userId) {
+		taskInputPort.deleteById(id);
+		model.addAttribute("tasks", taskInputPort.getByUserId(userId));
+		return "listOfTasks";	
+	}	
+
+	/*
 	@GetMapping("/updateTaskForm")
 	public String updateForm(Model model, @RequestParam int id, @RequestParam String userID) {
 		model.addAttribute("task", userService.findById(id));
@@ -58,12 +69,6 @@ public class TaskController {
 		model.addAttribute("tasks", userService.findAllTasksByUser(task.getUser().getId()));
 		return "listOfTasks";	
 	}
-	
-	@GetMapping("/deleteTask")
-	public String delete(Model model, @RequestParam int id, @RequestParam String userID) {
-		userService.delete(new Task(id));
-		model.addAttribute("tasks", userService.findAllTasksByUser(userID));
-		return "listOfTasks";	
-	}	
 	*/
+
 }

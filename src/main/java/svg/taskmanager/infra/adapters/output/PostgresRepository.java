@@ -71,12 +71,7 @@ public class PostgresRepository implements EntityRepository {
             return list;
         }
 
-        throw new IllegalArgumentException("This user id has not been found:" + userId);
-        //return Collections.emptyList();
-        //FIXME
-        //throw new IllegalArgumentException("This user id has not been found:" + userId);
-        //When the user doesn't have task an exception is thrown
-        //Should all user have tasks?
+        return Collections.emptyList();
     }
 
     @Override

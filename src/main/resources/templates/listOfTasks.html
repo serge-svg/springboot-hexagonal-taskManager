@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="ISO-8859-1">
+<title>List of tasks</title>
+<link rel="stylesheet" 
+	  href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" />
+</head>
+<body>
+    <div class="container">
+    <br>
+		<table class="table table-bordered table-striped">
+			<thead>
+				<tr>
+					<th>User</th>
+					<th>Title</th>
+					<th>Description</th>
+					<th>Actions</th>
+				</tr>
+			</thead>
+			<tbody>
+			<tbody th:if="${not #lists.isEmpty(tasks)}">
+			    <tr th:each="task: ${tasks}">
+					<td th:text="${task.userId}"></td>
+					<td th:text="${task.title}"></td>
+					<td th:text="${task.description}"></td>
+					<td>
+						<!-- <a th:href="@{updateTaskForm(id=${task.id}, userID=${task.userId})}" class="btn btn-info">Update</a> -->
+						<a th:href="@{deleteTask(id=${task.id}, userId=${task.userId})}" class="btn btn-danger">Delete</a>
+					</td>
+			    </tr>
+			</tbody>
+			<tbody th:if="${#lists.isEmpty(tasks)}">
+				<tr>
+					<td colspan="4">No Data found</td>
+				</tr>
+			</tbody>
+		</table>
+    	<a th:href="@{addTaskForm(userId=${userId})}" class='btn btn-primary col-2'>Add</a>
+		<hr>
+		<a th:href="@{/task-manager/users}" >Back to users</a>		    	
+	</div>
+</body>
+</html>
