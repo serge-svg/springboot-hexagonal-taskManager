@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="ISO-8859-1">
+<title>Tasks management</title>
+<link rel="stylesheet" 
+	  href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" />
+</head>
+<body>
+	<div class="container">
+		<h3>Add New Task</h3>
+		<hr/>
+		<form action="insertTask" th:object="${task}" method="POST">
+			<label for="userId">User Id</label>
+			<input type="text" name="userId" th:value="${userId}" class="form-control col-4 mb-4" readonly="readonly" >
+			
+			<label for="title">Title</label>
+			<input type="text" name="title" class="form-control col-8 mb-4" placeholder="Enter a title" >
+			
+			<label for="description">Description</label>
+			<textarea rows="4" name="description" class="form-control col-8 mb-4" placeholder="Enter a description"></textarea> 
+			
+			<button type="submit" class="btn btn-primary col-2">Add</button>
+		</form>
+		<hr>
+		<a th:href="@{listOfTasksByUser(userId=${userId})}">Back to tasks</a> 
+	</div>
+</body>
+</html>

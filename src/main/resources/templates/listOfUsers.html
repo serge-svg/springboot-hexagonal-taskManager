@@ -3,12 +3,10 @@
 <head>
 <meta charset="ISO-8859-1">
 <title>List of users</title>
-<!--<link rel="stylesheet" 
-	  href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" /> -->
+<link rel="stylesheet" 
+	  href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" />
 </head>
 <body>
-	Hi there!
-<!--
     <div class="container">
     <br>
 	<table class="table table-bordered table-striped">
@@ -20,23 +18,25 @@
 				<th>Actions</th>
 			</tr>
 		</thead>
-		<tbody>
-
+		<tbody th:if="${not #lists.isEmpty(users)}">
 		    <tr th:each="user : ${users}">
 				<td th:text="${user.nationalId}"></td>
 				<td th:text="${user.name}"></td>
 				<td th:text="${user.email}"></td>
 				<td>
-					<a th:href="@{/tasks/listOfTasksByUser(id=${user.id})}" class="btn btn-info">Tasks</a>
-					<a th:href="@{updateUserForm(id=${user.id})}" class="btn btn-info">Update</a>
+					<a th:href="@{/tasks/listOfTasksByUser(userId=${user.nationalId})}" class="btn btn-info">Tasks</a>
+					<!-- <a th:href="@{updateUserForm(id=${user.id})}" class="btn btn-info">Update</a> -->
 					<a th:href="@{deleteUser(id=${user.id})}" class="btn btn-danger">Delete</a>
 				</td>
 		    </tr>
 		</tbody>
+		<tbody th:if="${#lists.isEmpty(users)}">
+			<tr>
+				<td colspan="4">No Data found</td>
+			</tr>
+		</tbody>
 	</table>
-
 	<a th:href="@{addUserForm}" class="btn btn-info">Add User</a> 
 	</div>
--->
 </body>
 </html>

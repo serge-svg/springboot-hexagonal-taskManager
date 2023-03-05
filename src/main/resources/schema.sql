@@ -1,5 +1,5 @@
-DROP TABLE IF EXISTS TMUser;
-DROP TABLE IF EXISTS TMTask;
+--DROP TABLE IF EXISTS TMUser;
+--DROP TABLE IF EXISTS TMTask;
 
 CREATE TABLE IF NOT EXISTS TMUser
 (
@@ -18,9 +18,10 @@ CREATE TABLE IF NOT EXISTS TMTask
 
 );
 
+/*
 DELETE FROM TMUser;
 INSERT INTO TMUser (id, nationalid, name, email) VALUES (6, 'Spain','Xavi Hernandes','xavi@fcbarca.com');
-
+*/
 /*
     postgres command line examples:
         psql -U postgres -d taskManagerdb
