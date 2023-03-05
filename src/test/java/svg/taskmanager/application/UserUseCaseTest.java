@@ -46,7 +46,7 @@ public class UserUseCaseTest {
     }
 
     @Test
-    void getAll() {
+    void testGetAll() {
         doReturn(Collections.singletonList(user)).when(postgresRepository).getAll(TMUser.class);
         
         var users = userUseCase.getAll();
@@ -59,7 +59,7 @@ public class UserUseCaseTest {
     }
 
     @Test
-    void getById() {
+    void testGetById() {
         doReturn(user).when(postgresRepository).getById(ID, TMUser.class);
 
         user = userUseCase.getById(ID);
@@ -69,7 +69,7 @@ public class UserUseCaseTest {
     }
     
     @Test
-    void getByNationalId() {
+    void testGetByNationalId() {
         doReturn(user).when(postgresRepository).getByNationalId(NATIONAL_ID, TMUser.class);
 
         user =  userUseCase.getByNationalId(NATIONAL_ID);
@@ -79,7 +79,7 @@ public class UserUseCaseTest {
     }
 
     @Test
-    void getByName() {
+    void testGetByName() {
         doReturn(Collections.singletonList(user)).when(postgresRepository).getByName(NAME, TMUser.class);
 
         var users =  userUseCase.getByName(NAME);
@@ -92,7 +92,7 @@ public class UserUseCaseTest {
     }
 
     @Test
-    void deleteById() {
+    void testDeleteById() {
         doReturn(true).when(postgresRepository).deleteById(ID, TMUser.class);
 
         userUseCase.deleteById(ID);
@@ -101,7 +101,7 @@ public class UserUseCaseTest {
     }
 
     @Test
-    void create() {
+    void testCreate() {
         doReturn(true).when(postgresRepository).save(any());
 
         userUseCase.create(NATIONAL_ID, NAME, EMAIL);
