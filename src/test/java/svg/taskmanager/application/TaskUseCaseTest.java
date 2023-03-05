@@ -87,7 +87,7 @@ public class TaskUseCaseTest {
     }
 
     @Test
-    void create() {
+    void testCreate() {
         doReturn(true).when(postgresRepository).save(any());
 
         taskUseCase.create(USER_ID, TITLE, DESCRIPTION);
