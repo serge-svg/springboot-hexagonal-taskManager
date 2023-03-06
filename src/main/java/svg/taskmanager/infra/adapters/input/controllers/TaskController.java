@@ -55,20 +55,18 @@ public class TaskController {
 		return "listOfTasks";	
 	}	
 
-	/*
 	@GetMapping("/updateTaskForm")
-	public String updateForm(Model model, @RequestParam int id, @RequestParam String userID) {
-		model.addAttribute("task", userService.findById(id));
-		model.addAttribute("userID", userID);
+	public String updateForm(Model model, @RequestParam int id, @RequestParam String userId) {
+		model.addAttribute("task", taskInputPort.getByUserId(userId));
+		model.addAttribute("userId", userId);
 		return "updateTaskForm";
 	}
 	
 	@GetMapping("/updateTask")
-	public String update(Model model, Task task) {
-		userService.update(task);
-		model.addAttribute("tasks", userService.findAllTasksByUser(task.getUser().getId()));
+	public String update(Model model, @RequestParam String id, @RequestParam String userId, @RequestParam String title, @RequestParam String description) {
+		taskInputPort.update(id, userId, title, description);
+		model.addAttribute("tasks", taskInputPort.getByUserId(userId));
 		return "listOfTasks";	
-	}
-	*/
+	}	
 
 }

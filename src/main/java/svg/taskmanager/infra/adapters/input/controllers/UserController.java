@@ -52,4 +52,12 @@ public class UserController {
 		return "updateUserForm";
 	}
 
+	@GetMapping("/updateUser")
+	public String updateForm(Model model, @RequestParam String id, @RequestParam String nationalId, @RequestParam String name, @RequestParam String email) {
+		userInputPort.update(id, nationalId, name, email);
+		model.addAttribute("users", userInputPort.getAll());
+		return "listOfUsers";
+	}
+
+
 }
