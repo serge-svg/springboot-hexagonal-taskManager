@@ -47,6 +47,18 @@ public class TaskUseCase implements TaskInputPort{
     }
 
     @Override
+    public boolean update(String id, String userId, String title, String description) {        
+        TMTask task = TMTask.builder()
+            .id(id)
+            .userId(userId)
+            .title(title)
+            .description(description)
+            .build();
+        
+        return entityRepository.update(task);
+    }
+
+    @Override
     public boolean deleteById(String id) {
         return entityRepository.deleteById(id, TMTask.class);
     }

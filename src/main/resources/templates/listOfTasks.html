@@ -25,7 +25,7 @@
 					<td th:text="${task.title}"></td>
 					<td th:text="${task.description}"></td>
 					<td>
-						<!-- <a th:href="@{updateTaskForm(id=${task.id}, userID=${task.userId})}" class="btn btn-info">Update</a> -->
+						<a th:href="@{updateTaskForm(id=${task.id}, userId=${task.userId})}" class="btn btn-info">Update</a>
 						<a th:href="@{deleteTask(id=${task.id}, userId=${task.userId})}" class="btn btn-danger">Delete</a>
 					</td>
 			    </tr>
@@ -36,7 +36,7 @@
 				</tr>
 			</tbody>
 		</table>
-    	<a th:href="@{addTaskForm(userId=${userId})}" class='btn btn-primary col-2'>Add</a>
+    	<a th:href="@{addTaskForm(userId=${userId})}" class="btn btn-primary col-2">Add</a>
 		<hr>
 		<a th:href="@{/task-manager/users}" >Back to users</a>		    	
 	</div>

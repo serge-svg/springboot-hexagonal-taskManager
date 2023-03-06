@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="ISO-8859-1">
+<title>Users management</title>
+<link rel="stylesheet" 
+	  href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" />
+</head>
+<body>
+	<div class="container">
+		<h3>Update User</h3>
+		<hr/>
+		<form action="updateUser" th:object="${user}" method="PUT">
+			<input type="text" name="id" th:field="*{id}" class="form-control col-4 mb-4" hidden>
+			
+			<label for="id">ID</label>
+			<input type="text" name="nationalId" th:field="*{nationalId}" class="form-control col-4 mb-4" readonly="readonly">
+			
+			<label for="name">Name</label>
+			<input type="text" name="name" th:field="*{name}" class="form-control col-4 mb-4" placeholder="Enter Name" >
+			
+			<label for="email">Email</label>
+			<input type="email" name="email" th:field="*{email}" class="form-control col-4 mb-4" placeholder="Enter Email" >
+			
+			<button type="submit" class="btn btn-primary col-2">Update</button>
+		</form>
+		<hr>
+		<a th:href="@{users}">Back to users</a> 
+	</div>
+</body>
+</html>

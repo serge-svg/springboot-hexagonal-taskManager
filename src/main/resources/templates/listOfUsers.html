@@ -25,7 +25,7 @@
 				<td th:text="${user.email}"></td>
 				<td>
 					<a th:href="@{/tasks/listOfTasksByUser(userId=${user.nationalId})}" class="btn btn-info">Tasks</a>
-					<!-- <a th:href="@{updateUserForm(id=${user.id})}" class="btn btn-info">Update</a> -->
+					<a th:href="@{updateUserForm(id=${user.id})}" class="btn btn-info">Update</a>
 					<a th:href="@{deleteUser(id=${user.id})}" class="btn btn-danger">Delete</a>
 				</td>
 		    </tr>
@@ -36,7 +36,7 @@
 			</tr>
 		</tbody>
 	</table>
-	<a th:href="@{addUserForm}" class="btn btn-info">Add User</a> 
+	<a th:href="@{addUserForm}" class="btn btn-primary col-2">Add User</a> 
 	</div>
 </body>
 </html>

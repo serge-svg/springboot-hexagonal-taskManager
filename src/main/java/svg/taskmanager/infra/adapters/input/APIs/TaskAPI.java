@@ -44,6 +44,11 @@ public class TaskAPI {
         return taskInputPort.create(userId, title, description);
     }
 
+    @PostMapping(value = "update", produces = MediaType.APPLICATION_JSON_VALUE)
+    public boolean update(@RequestParam String id, @RequestParam String userId, @RequestParam String title, @RequestParam String description) {
+        return taskInputPort.update(id, userId, title, description);
+    }
+
     @DeleteMapping(value = "delete")
     public boolean deleteById(@RequestParam String id) {
         return taskInputPort.deleteById(id);
