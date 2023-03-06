@@ -117,6 +117,42 @@ public class PostgresRepository implements EntityRepository {
         return jdbcTemplate.update(sql.toString(), fieldValues) == 1;
     }
 
+    @Override
+    public <T> boolean update(T reg) {
+        Field[] entityFields = reg.getClass().getDeclaredFields();
+        String[] fields = new String[entityFields.length];
+        Object[] fieldValues = new Object[entityFields.length];
+        try {
+            for (int i = 0; i < entityFields.length; i++) {
+                fields[i] = entityFields[i].getName();
+                fieldValues[i] = reg.getClass()
+                        .getMethod("get" + entityFields[i].getName().substring(0, 1).toUpperCase()
+                                + entityFields[i].getName().substring(1))
+                        .invoke(reg);
+            }
+        } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException
+                | NoSuchMethodException | SecurityException e) {
+            e.printStackTrace();
+        }
+
+        StringBuilder sql = new StringBuilder();
+        sql.append("UPDATE ")
+                .append(reg.getClass().getSimpleName())
+                .append(" SET ");
+        
+        for (int i = 1; i < fields.length; i++){
+            if (i == fields.length - 1) {
+                sql.append(fields[i]).append(" = ").append(fieldValues[i] instanceof String  ? "'"+ fieldValues[i] + "'" : fieldValues[i]);
+            } else {
+                sql.append(fields[i]).append(" = ").append(fieldValues[i] instanceof String  ? "'"+ fieldValues[i] + "'" : fieldValues[i]).append(", ");
+            }
+        }
+        sql.append(" WHERE ")
+                .append(fields[0]).append(" = ").append(fieldValues[0] instanceof String  ? "'"+ fieldValues[0] + "'" : fieldValues[0]);
+        
+        return jdbcTemplate.update(sql.toString()) == 1;
+    }    
+
     private class LombokRowMapper<T> implements RowMapper<T> {
         private Class<?> clazz = null;
         public LombokRowMapper(Class<?> clazz) {

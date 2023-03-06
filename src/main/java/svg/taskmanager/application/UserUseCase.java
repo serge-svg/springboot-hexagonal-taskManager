@@ -53,6 +53,18 @@ public class UserUseCase implements UserInputPort {
     }
 
     @Override
+    public boolean update(String id, String nationalId, String name, String email) {
+        TMUser user = TMUser.builder()
+                .id(id)
+                .nationalId(nationalId)
+                .name(name)
+                .email(email)
+                .build();
+
+        return entityRepository.update(user);
+    }
+
+    @Override
     public boolean deleteById(String id) {
         TMUser tmUser = getById(id);
         if (null != tmUser && !tmUser.getNationalId().isEmpty()) {

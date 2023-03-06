@@ -11,6 +11,7 @@ public interface UserInputPort {
     public TMUser getByNationalId(String nationalId);
     public List<TMUser> getByName(String name);
     public boolean create(String nationalId, String name, String email);
+    public boolean update(String id, String nationalId, String name, String email);
     public boolean deleteById(String id);
     
 }
