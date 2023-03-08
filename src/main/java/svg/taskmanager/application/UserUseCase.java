@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.UUID;
 
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import svg.taskmanager.domain.TMUser;
 import svg.taskmanager.infra.ports.input.UserInputPort;
@@ -40,6 +41,7 @@ public class UserUseCase implements UserInputPort {
         return entityRepository.getByName(name, TMUser.class);
     }
 
+    @Transactional
     @Override
     public boolean create(String nationalId, String name, String email) {
         TMUser user = TMUser.builder()
@@ -52,6 +54,7 @@ public class UserUseCase implements UserInputPort {
         return entityRepository.save(user);
     }
 
+    @Transactional
     @Override
     public boolean update(String id, String nationalId, String name, String email) {
         TMUser user = TMUser.builder()
@@ -64,13 +67,14 @@ public class UserUseCase implements UserInputPort {
         return entityRepository.update(user);
     }
 
+    @Transactional
     @Override
     public boolean deleteById(String id) {
         TMUser tmUser = getById(id);
         if (null != tmUser && !tmUser.getNationalId().isEmpty()) {
             String nationalId = tmUser.getNationalId();
             taskUseCase.getByUserId(nationalId).stream()
-                    .forEach((task) -> taskUseCase.deleteById(task.getId()));
+                    .forEach((task) ->  taskUseCase.deleteById(task.getId()));
         }
         return entityRepository.deleteById(id, TMUser.class);
     }
