@@ -74,7 +74,7 @@ public class UserUseCase implements UserInputPort {
         if (null != tmUser && !tmUser.getNationalId().isEmpty()) {
             String nationalId = tmUser.getNationalId();
             taskUseCase.getByUserId(nationalId).stream()
-                    .forEach((task) ->  taskUseCase.deleteById(task.getId()));
+                    .forEach((task) -> taskUseCase.deleteById(task.getId()));
         }
         return entityRepository.deleteById(id, TMUser.class);
     }
