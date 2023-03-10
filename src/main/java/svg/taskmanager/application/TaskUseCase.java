@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.UUID;
 
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import svg.taskmanager.domain.TMTask;
 import svg.taskmanager.infra.ports.input.TaskInputPort;
@@ -34,6 +35,7 @@ public class TaskUseCase implements TaskInputPort{
         return entityRepository.getByUserId(userId, TMTask.class);
     }
 
+    @Transactional
     @Override
     public boolean create(String userId, String title, String description) {        
         TMTask task = TMTask.builder()
@@ -46,6 +48,7 @@ public class TaskUseCase implements TaskInputPort{
         return entityRepository.save(task);
     }
 
+    @Transactional
     @Override
     public boolean update(String id, String userId, String title, String description) {        
         TMTask task = TMTask.builder()
@@ -58,6 +61,7 @@ public class TaskUseCase implements TaskInputPort{
         return entityRepository.update(task);
     }
 
+    @Transactional
     @Override
     public boolean deleteById(String id) {
         return entityRepository.deleteById(id, TMTask.class);
