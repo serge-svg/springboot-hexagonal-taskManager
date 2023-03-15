@@ -8,7 +8,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -29,7 +28,6 @@ public class UserController {
 	}
 
 	@GetMapping({"/users", "/", ""})
-	@Operation(summary = "Find all users")
 	public String getAll(Model model) {
 		model.addAttribute("users", userInputPort.getAll());
 		return "listOfUsers";		
@@ -41,6 +39,7 @@ public class UserController {
 	}
 	
 	@PostMapping("/insert-user")
+	@ResponseStatus(HttpStatus.CREATED)
 	public String insert(Model model, @RequestParam String nationalId, @RequestParam String name, @RequestParam String email) {
 		userInputPort.create(nationalId, name, email);
 		model.addAttribute("users", userInputPort.getAll());
