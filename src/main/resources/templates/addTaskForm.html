@@ -10,7 +10,7 @@
 	<div class="container">
 		<h3>Add New Task</h3>
 		<hr/>
-		<form action="insertTask" th:object="${task}" method="POST">
+		<form action="insert-task" th:object="${task}" method="POST">
 			<label for="userId">User Id</label>
 			<input type="text" name="userId" th:value="${userId}" class="form-control col-4 mb-4" readonly="readonly" >
 			
@@ -23,7 +23,7 @@
 			<button type="submit" class="btn btn-primary col-2">Add</button>
 		</form>
 		<hr>
-		<a th:href="@{listOfTasksByUser(userId=${userId})}">Back to tasks</a> 
+		<a th:href="@{user-tasks(userId=${userId})}">Back to tasks</a> 
 	</div>
 </body>
 </html>

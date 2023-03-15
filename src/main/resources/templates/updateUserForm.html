@@ -10,7 +10,7 @@
 	<div class="container">
 		<h3>Update User</h3>
 		<hr/>
-		<form action="updateUser" th:object="${user}" method="PUT">
+		<form th:action="update-user" th:object="${user}" method="post">
 			<input type="text" name="id" th:field="*{id}" class="form-control col-4 mb-4" hidden>
 			
 			<label for="id">ID</label>
