@@ -27,9 +27,9 @@ import java.util.List;
 import static org.mockito.ArgumentMatchers.any;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@ExtendWith(MockitoExtension.class)
-@AutoConfigureMockMvc
-@EnableAutoConfiguration(exclude={DataSourceAutoConfiguration.class})
+//@ExtendWith(MockitoExtension.class)
+//@AutoConfigureMockMvc
+//@EnableAutoConfiguration(exclude={DataSourceAutoConfiguration.class})
 class TaskAPITest {
 
     @LocalServerPort
