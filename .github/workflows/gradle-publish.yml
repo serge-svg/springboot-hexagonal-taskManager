@@ -8,14 +8,12 @@ on:
 
 jobs:
   build:
-  
+    name: Build and analyze
     runs-on: ubuntu-latest
-
    # runs-on: ${{matrix.os}}
    # strategy:
    #   matrix:
    #     os: [ubuntu-latest, windows-latest]
- 
     steps:    
     - name: Checkout
       uses: actions/checkout@v3
@@ -26,11 +24,31 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
+    - name: Cache SonarCloud packages
+      uses: actions/cache@v3
+      with:
+        path: ~/.sonar/cache
+        key: ${{ runner.os }}-sonar
+        restore-keys: ${{ runner.os }}-sonar
+
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
 
-    - name: Build with Gradle
-      run: ./gradlew build
+    - name: Cache Gradle packages
+      uses: actions/cache@v3
+      with:
+        path: ~/.gradle/caches
+        key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle') }}
+        restore-keys: ${{ runner.os }}-gradle
+
+    - name: Build and analyze
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      run: ./gradlew build sonarqube --info
+    
+    #- name: Build with Gradle
+    #  run: ./gradlew build
     
     - name: Build and Push Docker image
       uses: mr-smithers-excellent/docker-build-push@v5

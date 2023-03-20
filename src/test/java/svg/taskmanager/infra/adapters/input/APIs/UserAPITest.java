@@ -47,7 +47,7 @@ class UserAPITest {
                 .build());
         Mockito.when(userAPI.getAll()).thenReturn(users);
 
-        MockHttpServletResponse response = mockMvc.perform(get("/webapi/taskManager/users/getall")
+        MockHttpServletResponse response = mockMvc.perform(get("/webapi/taskmanager/users/getall")
                         .accept(MediaType.APPLICATION_JSON))
                 .andReturn().getResponse();
 
