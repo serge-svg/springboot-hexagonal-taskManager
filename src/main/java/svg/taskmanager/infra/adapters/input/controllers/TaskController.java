@@ -10,11 +10,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-import io.swagger.v3.oas.annotations.Operation;
+
 import svg.taskmanager.infra.ports.input.TaskInputPort;
 
 @Controller
-@RequestMapping("/tasks")
+@RequestMapping("/taskmanager")
 public class TaskController {
 
 	private TaskInputPort taskInputPort;
@@ -31,20 +31,20 @@ public class TaskController {
 		return "listOfTasks";		
 	}	
 
-	@GetMapping("/user-tasks")
+	@GetMapping("/tasks/user-tasks")
 	public String getByUserId(Model model, @RequestParam String userId) {
 		model.addAttribute("tasks", taskInputPort.getByUserId(userId));
 		model.addAttribute("userId", userId);
 		return "listOfTasks";		
 	}	
 	
-	@GetMapping("/add-taskform")
+	@GetMapping("/tasks/add-taskform")
 	public String addForm(Model model, String userId) {
 		model.addAttribute("userId", userId);
 		return "addTaskForm";
 	}
 	
-	@PostMapping("/insert-task")
+	@PostMapping("/tasks/insert-task")
 	@ResponseStatus(HttpStatus.CREATED)
 	public String insert(Model model, @RequestParam String userId, @RequestParam String title, @RequestParam String description) {
 		taskInputPort.create(userId, title, description);
@@ -53,14 +53,14 @@ public class TaskController {
 		return "listOfTasks";	
 	}
 
-	@GetMapping("/update-taskform")
+	@GetMapping("/tasks/update-taskform")
 	public String updateForm(Model model, @RequestParam String id, @RequestParam String userId) {
 		model.addAttribute("task", taskInputPort.getById(id));
 		model.addAttribute("userId", userId);
 		return "updateTaskForm";
 	}
 	
-	@PostMapping("/update-task")
+	@PostMapping("/tasks/update-task")
 	@ResponseStatus(HttpStatus.ACCEPTED)
 	public String update(Model model, @RequestParam String id, @RequestParam String userId, @RequestParam String title, @RequestParam String description) {
 		taskInputPort.update(id, userId, title, description);
@@ -68,7 +68,7 @@ public class TaskController {
 		return "listOfTasks";	
 	}	
 
-	@DeleteMapping("/delete-task")
+	@GetMapping("/tasks/delete-task")
 	public String deleteById(Model model, @RequestParam String id, @RequestParam String userId) {
 		taskInputPort.deleteById(id);
 		model.addAttribute("tasks", taskInputPort.getByUserId(userId));
