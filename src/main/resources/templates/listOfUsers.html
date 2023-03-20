@@ -24,9 +24,9 @@
 				<td th:text="${user.name}"></td>
 				<td th:text="${user.email}"></td>
 				<td>
-					<a th:href="@{/tasks/user-tasks(userId=${user.nationalId})}" class="btn btn-info">Tasks</a>
+					<a th:href="@{/taskmanager/tasks/user-tasks(userId=${user.nationalId})}" class="btn btn-info">Tasks</a>
 					<a th:href="@{/taskmanager/update-userform(id=${user.id})}" class="btn btn-info">Update</a>
-					<a th:href="@{delete-user(id=${user.id})}" class="btn btn-danger">Delete</a>
+					<a th:href="@{/taskmanager/delete-user(id=${user.id})}" class="btn btn-danger">Delete</a>
 				</td>
 		    </tr>
 		</tbody>
