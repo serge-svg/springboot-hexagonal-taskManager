@@ -69,7 +69,7 @@ class TaskAPITest {
         }
 
         @Test
-        @DisplayName("Should calls the getbyid and return a concret task")
+        @DisplayName("Should calls the getbyid and return a concrete task")
         void getById() {
                 var task = TMTask.builder()
                                 .id("001")
@@ -86,13 +86,50 @@ class TaskAPITest {
                                 .port(port)
                                 .path("/webapi/taskmanager/tasks")
                                 .path("/getbyid")
+                                .queryParam("id", "001")
                                 .toUriString();
                 ResponseEntity<TMTask> response = restTemplate.exchange(url,
                                 HttpMethod.GET,
                                 null,
                                 new ParameterizedTypeReference<>() {});
-                //Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+                Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
                 Assertions.assertThat(response.getBody()).isEqualTo(task);                
         }
 
+        @Test
+        @DisplayName("Should calls the getbyuserid and return a concrete list of tasks")
+        void getByUserId() {
+                var task1 = TMTask.builder()
+                        .id("001")
+                        .title("Increase resources")
+                        .description("Increase memory")
+                        .userId("1112233A")
+                        .build();
+
+                var task2 = TMTask.builder()
+                        .id("002")
+                        .title("Increase resources")
+                        .description("Increase memory")
+                        .userId("11122233A")
+                        .build();
+
+                Mockito.when(entityRepository.getByUserId("11122233A", TMTask.class)).thenReturn(List.of(task1));
+
+                var url = UriComponentsBuilder.newInstance()
+                        .scheme("http")
+                        .host("localhost")
+                        .port(port)
+                        .path("/webapi/taskmanager/tasks")
+                        .path("/getbyuserid")
+                        .queryParam("userId", "11122233A")
+                        .toUriString();
+
+                ResponseEntity<TMTask> response = restTemplate.exchange(url,
+                        HttpMethod.GET,
+                        null,
+                        new ParameterizedTypeReference<>() {});
+                Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+                //Assertions.assertThat(response.getBody()).isEqualTo(task);
+
+        }
 }
