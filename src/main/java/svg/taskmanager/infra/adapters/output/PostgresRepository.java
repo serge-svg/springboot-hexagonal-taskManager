@@ -17,7 +17,8 @@ import svg.taskmanager.infra.ports.output.EntityRepository;
 @Repository
 public class PostgresRepository implements EntityRepository {
 
-    public static final String SELECT_FROM = "SELECT * FROM ";
+    private static final String SELECT_FROM = "SELECT * FROM ";
+    private static final String DELETE_FROM = "DELETE FROM ";
     JdbcTemplate jdbcTemplate;
     
     public PostgresRepository(JdbcTemplate jdbcTemplate) {
@@ -77,7 +78,7 @@ public class PostgresRepository implements EntityRepository {
 
     @Override
     public <T> boolean deleteById(String id, Class<T> clazz) {
-        String sql = "DELETE FROM " + clazz.getSimpleName() + " WHERE id = ?";
+        String sql = DELETE_FROM + clazz.getSimpleName() + " WHERE id = ?";
         Object[] args = new Object[] { id };
 
         return jdbcTemplate.update(sql, args) == 1;
@@ -85,7 +86,7 @@ public class PostgresRepository implements EntityRepository {
 
     @Override
     public <T> boolean deleteAll(Class<T> clazz) {
-        String sql = "DELETE FROM " + clazz.getSimpleName() + ";";
+        String sql = DELETE_FROM + clazz.getSimpleName() + ";";
         Object[] args = new Object[] {};
         return jdbcTemplate.update(sql, args) >= 0;
     }
