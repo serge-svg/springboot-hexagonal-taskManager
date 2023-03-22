@@ -1,7 +1,6 @@
 package svg.taskmanager.infra.adapters.input.APIs;
 
 import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -21,10 +20,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.util.UriComponentsBuilder;
 import svg.taskmanager.domain.TMTask;
-import svg.taskmanager.domain.TMTaskList;
 import svg.taskmanager.infra.ports.output.EntityRepository;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -43,7 +40,7 @@ class TaskAPITest {
         private TestRestTemplate testRestTemplate;
 
         @Test
-        @DisplayName("Should call the get API")
+        @DisplayName("Should call the getall API method and return a list of task")
         void getAll() {
                 var task = TMTask.builder()
                                 .id("001")
@@ -58,9 +55,10 @@ class TaskAPITest {
                                 .scheme("http")
                                 .host("localhost")
                                 .port(port)
-                                .path("/webapi/taskmanager/tasks")
+                                .path("/webapi/task-manager/tasks")
                                 .path("/getall")
                                 .toUriString();
+
                 ResponseEntity<List<TMTask>> response = testRestTemplate.exchange(url,
                                 HttpMethod.GET,
                                 null,
@@ -72,7 +70,7 @@ class TaskAPITest {
         }
 
         @Test
-        @DisplayName("Should calls the getbyid and return a concrete task")
+        @DisplayName("Should call the getbyid API method and return a concrete task")
         void getById() {
                 var task = TMTask.builder()
                                 .id("001")
@@ -87,7 +85,7 @@ class TaskAPITest {
                                 .scheme("http")
                                 .host("localhost")
                                 .port(port)
-                                .path("/webapi/taskmanager/tasks")
+                                .path("/webapi/task-manager/tasks")
                                 .path("/getbyid")
                                 .queryParam("id", "001")
                                 .toUriString();
@@ -100,9 +98,8 @@ class TaskAPITest {
                 Assertions.assertThat(response.getBody()).isEqualTo(task);                
         }
 
-
         @Test
-        @DisplayName("Should calls the getbyuserid and return a concrete list of tasks")
+        @DisplayName("Should call the getbyuserid and return a concrete list of tasks")
         void getByUserId() {
                 var task1 = TMTask.builder()
                         .id("001")
@@ -117,31 +114,25 @@ class TaskAPITest {
                         .description("Increase memory")
                         .userId("11122233A")
                         .build();
-                var tasks = new TMTaskList();
-                /* Luiz: How to test than the call is returning 2 tasks ??? is it worth it ???
-                List<TMTask> listOfTasks = new ArrayList<>();
-                listOfTasks.add(task1);
-                listOfTasks.add(task2);
-                tasks.setTasks(listOfTasks);
-                */
-                Mockito.when(entityRepository.getByUserId("11122233A", TMTask.class)).thenReturn((List<TMTask>) any(TMTaskList.class));
+
+                Mockito.when(entityRepository.getByUserId("11122233A", TMTask.class)).thenReturn(List.of(task1, task2));
 
                 var url = UriComponentsBuilder.newInstance()
                         .scheme("http")
                         .host("localhost")
                         .port(port)
-                        .path("/webapi/taskmanager/tasks")
+                        .path("/webapi/task-manager/tasks")
                         .path("/getbyuserid")
                         .queryParam("userId", "11122233A")
                         .toUriString();
 
-                ResponseEntity<TMTask> response = testRestTemplate.exchange(url,
+                ResponseEntity<List<TMTask>> response = testRestTemplate.exchange(url,
                         HttpMethod.GET,
                         null,
-                        new ParameterizedTypeReference<>() {});
+                        new ParameterizedTypeReference<>() {
+                        });
 
                 Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-                //Assertions.assertThat(response.getBody()).isEqualTo(task);
-
+                Assertions.assertThat(response.getBody()).contains(task1, task2);
         }
 }
