@@ -20,7 +20,7 @@ import org.springframework.http.MediaType;
 
 @RestController
 @Tag(name = "Users")
-@RequestMapping(value = "/webapi/taskmanager/users/")
+@RequestMapping(value = "/webapi/task-manager/users/")
 public class UserAPI {
 
     private UserInputPort userInputPort;
@@ -41,7 +41,7 @@ public class UserAPI {
         return userInputPort.getById(id);
     }
 
-    @Operation(summary = "Find user by national id")
+    @Operation(summary = "Finds user by national id")
     @GetMapping(value = "getbynationalid", produces = MediaType.APPLICATION_JSON_VALUE)
     public TMUser getByNationalId(@RequestParam String nationalId) {
         return userInputPort.getByNationalId(nationalId);
