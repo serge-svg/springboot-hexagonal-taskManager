@@ -1,6 +1,7 @@
 package svg.taskmanager.infra.adapters.input.APIs;
 
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -20,8 +21,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.util.UriComponentsBuilder;
 import svg.taskmanager.domain.TMTask;
+import svg.taskmanager.domain.TMTaskList;
 import svg.taskmanager.infra.ports.output.EntityRepository;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -37,7 +40,7 @@ class TaskAPITest {
         @MockBean
         private EntityRepository entityRepository;
         @Autowired
-        private TestRestTemplate restTemplate;
+        private TestRestTemplate testRestTemplate;
 
         @Test
         @DisplayName("Should call the get API")
@@ -58,7 +61,7 @@ class TaskAPITest {
                                 .path("/webapi/taskmanager/tasks")
                                 .path("/getall")
                                 .toUriString();
-                ResponseEntity<List<TMTask>> response = restTemplate.exchange(url,
+                ResponseEntity<List<TMTask>> response = testRestTemplate.exchange(url,
                                 HttpMethod.GET,
                                 null,
                                 new ParameterizedTypeReference<>() {
@@ -88,13 +91,15 @@ class TaskAPITest {
                                 .path("/getbyid")
                                 .queryParam("id", "001")
                                 .toUriString();
-                ResponseEntity<TMTask> response = restTemplate.exchange(url,
+
+                ResponseEntity<TMTask> response = testRestTemplate.exchange(url,
                                 HttpMethod.GET,
                                 null,
                                 new ParameterizedTypeReference<>() {});
                 Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
                 Assertions.assertThat(response.getBody()).isEqualTo(task);                
         }
+
 
         @Test
         @DisplayName("Should calls the getbyuserid and return a concrete list of tasks")
@@ -112,8 +117,14 @@ class TaskAPITest {
                         .description("Increase memory")
                         .userId("11122233A")
                         .build();
-
-                Mockito.when(entityRepository.getByUserId("11122233A", TMTask.class)).thenReturn(List.of(task1));
+                var tasks = new TMTaskList();
+                /* Luiz: How to test than the call is returning 2 tasks ??? is it worth it ???
+                List<TMTask> listOfTasks = new ArrayList<>();
+                listOfTasks.add(task1);
+                listOfTasks.add(task2);
+                tasks.setTasks(listOfTasks);
+                */
+                Mockito.when(entityRepository.getByUserId("11122233A", TMTask.class)).thenReturn((List<TMTask>) any(TMTaskList.class));
 
                 var url = UriComponentsBuilder.newInstance()
                         .scheme("http")
@@ -124,10 +135,11 @@ class TaskAPITest {
                         .queryParam("userId", "11122233A")
                         .toUriString();
 
-                ResponseEntity<TMTask> response = restTemplate.exchange(url,
+                ResponseEntity<TMTask> response = testRestTemplate.exchange(url,
                         HttpMethod.GET,
                         null,
                         new ParameterizedTypeReference<>() {});
+
                 Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
                 //Assertions.assertThat(response.getBody()).isEqualTo(task);
 
