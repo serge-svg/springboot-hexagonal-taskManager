@@ -19,7 +19,7 @@ import svg.taskmanager.infra.ports.input.TaskInputPort;
 
 @RestController
 @Tag(name = "Tasks")
-@RequestMapping(value = "webapi/taskmanager/tasks/")
+@RequestMapping(value = "webapi/task-manager/tasks/")
 public class TaskAPI {
 
     private TaskInputPort taskInputPort;
@@ -28,37 +28,37 @@ public class TaskAPI {
         this.taskInputPort = taskInputPort;
     }
 
-    @Operation(summary = "Finds all tasks")
+    @Operation(summary = "Find all tasks")
     @GetMapping(value = "getall", produces = MediaType.APPLICATION_JSON_VALUE)
     public List<TMTask> getAll() {
         return taskInputPort.getAll();
     }
 
-    @Operation(summary = "Finds a taks by id")
+    @Operation(summary = "Find a task by id")
     @GetMapping(value = "getbyid", produces = MediaType.APPLICATION_JSON_VALUE)
     public TMTask getById(@RequestParam String id) {
         return taskInputPort.getById(id);
     }
 
-    @Operation(summary = "Finds all user tasks")
+    @Operation(summary = "Find all user tasks")
     @GetMapping(value = "getbyuserid", produces = MediaType.APPLICATION_JSON_VALUE)
     public List<TMTask> getByUserId(@RequestParam String userId) {
         return taskInputPort.getByUserId(userId);
     }
 
-    @Operation(summary = "Creates a user task")
+    @Operation(summary = "Create a user task")
     @PostMapping(value = "create", produces = MediaType.APPLICATION_JSON_VALUE)
     public boolean create(@RequestParam String userId, @RequestParam String title, @RequestParam String description) {
         return taskInputPort.create(userId, title, description);
     }
 
-    @Operation(summary = "Updates a user task")
+    @Operation(summary = "Update a user task")
     @PutMapping(value = "update", produces = MediaType.APPLICATION_JSON_VALUE)
     public boolean update(@RequestParam String id, @RequestParam String userId, @RequestParam String title, @RequestParam String description) {
         return taskInputPort.update(id, userId, title, description);
     }
 
-    @Operation(summary = "Deletes a user task")
+    @Operation(summary = "Delete a user task")
     @DeleteMapping(value = "delete")
     public boolean deleteById(@RequestParam String id) {
         return taskInputPort.deleteById(id);

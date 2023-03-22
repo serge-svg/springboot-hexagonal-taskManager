@@ -16,7 +16,7 @@ import svg.taskmanager.infra.ports.input.UserInputPort;
 
 @Controller
 @Tag(name = "Task Manager")
-@RequestMapping("/taskmanager")
+@RequestMapping("/task-manager")
 public class UserController {
 	
 	private UserInputPort userInputPort;

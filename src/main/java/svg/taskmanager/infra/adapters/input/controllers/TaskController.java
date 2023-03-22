@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import svg.taskmanager.infra.ports.input.TaskInputPort;
 
 @Controller
-@RequestMapping("/taskmanager")
+@RequestMapping("/task-manager")
 public class TaskController {
 
 	private TaskInputPort taskInputPort;

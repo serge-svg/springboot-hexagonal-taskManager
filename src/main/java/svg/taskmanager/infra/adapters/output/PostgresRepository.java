@@ -17,20 +17,22 @@ import svg.taskmanager.infra.ports.output.EntityRepository;
 @Repository
 public class PostgresRepository implements EntityRepository {
 
+    private static final String SELECT_FROM = "SELECT * FROM ";
+    private static final String DELETE_FROM = "DELETE FROM ";
     JdbcTemplate jdbcTemplate;
-
+    
     public PostgresRepository(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
     
     @Override
     public <T> List<T> getAll(Class<T> clazz) {
-        return jdbcTemplate.query("SELECT * FROM " + clazz.getSimpleName(), new LombokRowMapper<T>(clazz));
+        return jdbcTemplate.query(SELECT_FROM + clazz.getSimpleName(), new LombokRowMapper<T>(clazz));
     }
 
     @Override
     public <T> T getById(String id, Class<T> clazz) {
-        List<T> list = jdbcTemplate.query("SELECT * FROM " + clazz.getSimpleName() + " WHERE id = ?",
+        List<T> list = jdbcTemplate.query(SELECT_FROM + clazz.getSimpleName() + " WHERE id = ?",
                 new LombokRowMapper<T>(clazz), id);
 
         if (!list.isEmpty()) {
@@ -42,7 +44,7 @@ public class PostgresRepository implements EntityRepository {
 
     @Override
     public <T> T getByNationalId(String nationalId, Class<T> clazz) {
-        List<T> list = jdbcTemplate.query("SELECT * FROM " + clazz.getSimpleName() + " WHERE nationalId = ?",
+        List<T> list = jdbcTemplate.query(SELECT_FROM + clazz.getSimpleName() + " WHERE nationalId = ?",
                 new LombokRowMapper<T>(clazz), nationalId);
 
         if (!list.isEmpty()){
@@ -53,7 +55,7 @@ public class PostgresRepository implements EntityRepository {
     }
 
     public <T> List<T> getByName(String name, Class<T> clazz) {
-        List<T> list = jdbcTemplate.query("SELECT * FROM " + clazz.getSimpleName() + " WHERE name like ? ",
+        List<T> list = jdbcTemplate.query(SELECT_FROM + clazz.getSimpleName() + " WHERE name like ? ",
                 new LombokRowMapper<T>(clazz), '%' + name + '%');
 
         if (!list.isEmpty()){
@@ -64,7 +66,7 @@ public class PostgresRepository implements EntityRepository {
     }
 
     public <T> List<T> getByUserId(String userId, Class<T> clazz) {
-        List<T> list = jdbcTemplate.query("SELECT * FROM " + clazz.getSimpleName() + " WHERE userId = ? ",
+        List<T> list = jdbcTemplate.query(SELECT_FROM + clazz.getSimpleName() + " WHERE userId = ? ",
                 new LombokRowMapper<T>(clazz), userId);
 
         if (!list.isEmpty()){
@@ -76,7 +78,7 @@ public class PostgresRepository implements EntityRepository {
 
     @Override
     public <T> boolean deleteById(String id, Class<T> clazz) {
-        String sql = "DELETE FROM " + clazz.getSimpleName() + " WHERE id = ?";
+        String sql = DELETE_FROM + clazz.getSimpleName() + " WHERE id = ?";
         Object[] args = new Object[] { id };
 
         return jdbcTemplate.update(sql, args) == 1;
@@ -84,7 +86,7 @@ public class PostgresRepository implements EntityRepository {
 
     @Override
     public <T> boolean deleteAll(Class<T> clazz) {
-        String sql = "DELETE FROM " + clazz.getSimpleName() + ";";
+        String sql = DELETE_FROM + clazz.getSimpleName() + ";";
         Object[] args = new Object[] {};
         return jdbcTemplate.update(sql, args) >= 0;
     }

@@ -32,40 +32,107 @@ import static org.mockito.ArgumentMatchers.any;
 @EnableAutoConfiguration(exclude={DataSourceAutoConfiguration.class})
 class TaskAPITest {
 
-    @LocalServerPort
-    private int port;
-    @MockBean
-    private EntityRepository postgresRepository;
-    @Autowired
-    private TestRestTemplate restTemplate;
+        @LocalServerPort
+        private int port;
+        @MockBean
+        private EntityRepository entityRepository;
+        @Autowired
+        private TestRestTemplate testRestTemplate;
 
-    @Test
-    @DisplayName("Should call the get API")
-    void getAll() {
-        var task = TMTask.builder()
-                .id("42")
-                .title("Increase resources")
-                .description("Increase memory")
-                .userId("6")
-                .build();
+        @Test
+        @DisplayName("Should call the getall API method and return a list of task")
+        void getAll() {
+                var task = TMTask.builder()
+                                .id("001")
+                                .title("Increase resources")
+                                .description("Increase memory")
+                                .userId("1112233A")
+                                .build();
 
-        Mockito.when(postgresRepository.getAll(any())).thenReturn(List.of(task));
+                Mockito.when(entityRepository.getAll(any())).thenReturn(List.of(task));
 
-        var url = UriComponentsBuilder.newInstance()
-                .scheme("http")
-                .host("localhost")
-                .port(port)
-                .path("/webapi/taskmanager/tasks")
-                .path("/getall")
-                .toUriString();
-        ResponseEntity<List<TMTask>> response = restTemplate.exchange(url,
-                HttpMethod.GET,
-                null,
-                new ParameterizedTypeReference<>() {
-                });
+                var url = UriComponentsBuilder.newInstance()
+                                .scheme("http")
+                                .host("localhost")
+                                .port(port)
+                                .path("/webapi/task-manager/tasks")
+                                .path("/getall")
+                                .toUriString();
 
-        Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-        Assertions.assertThat(response.getBody()).contains(task);
+                ResponseEntity<List<TMTask>> response = testRestTemplate.exchange(url,
+                                HttpMethod.GET,
+                                null,
+                                new ParameterizedTypeReference<>() {
+                                });
 
-    }
+                Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+                Assertions.assertThat(response.getBody()).contains(task);
+        }
+
+        @Test
+        @DisplayName("Should call the getbyid API method and return a concrete task")
+        void getById() {
+                var task = TMTask.builder()
+                                .id("001")
+                                .title("Increase resources")
+                                .description("Increase memory")
+                                .userId("1112233A")
+                                .build();
+
+                Mockito.when(entityRepository.getById("001", TMTask.class)).thenReturn(task);
+
+                var url = UriComponentsBuilder.newInstance()
+                                .scheme("http")
+                                .host("localhost")
+                                .port(port)
+                                .path("/webapi/task-manager/tasks")
+                                .path("/getbyid")
+                                .queryParam("id", "001")
+                                .toUriString();
+
+                ResponseEntity<TMTask> response = testRestTemplate.exchange(url,
+                                HttpMethod.GET,
+                                null,
+                                new ParameterizedTypeReference<>() {});
+                Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+                Assertions.assertThat(response.getBody()).isEqualTo(task);                
+        }
+
+        @Test
+        @DisplayName("Should call the getbyuserid and return a concrete list of tasks")
+        void getByUserId() {
+                var task1 = TMTask.builder()
+                        .id("001")
+                        .title("Increase resources")
+                        .description("Increase memory")
+                        .userId("1112233A")
+                        .build();
+
+                var task2 = TMTask.builder()
+                        .id("002")
+                        .title("Increase resources")
+                        .description("Increase memory")
+                        .userId("11122233A")
+                        .build();
+
+                Mockito.when(entityRepository.getByUserId("11122233A", TMTask.class)).thenReturn(List.of(task1, task2));
+
+                var url = UriComponentsBuilder.newInstance()
+                        .scheme("http")
+                        .host("localhost")
+                        .port(port)
+                        .path("/webapi/task-manager/tasks")
+                        .path("/getbyuserid")
+                        .queryParam("userId", "11122233A")
+                        .toUriString();
+
+                ResponseEntity<List<TMTask>> response = testRestTemplate.exchange(url,
+                        HttpMethod.GET,
+                        null,
+                        new ParameterizedTypeReference<>() {
+                        });
+
+                Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+                Assertions.assertThat(response.getBody()).contains(task1, task2);
+        }
 }

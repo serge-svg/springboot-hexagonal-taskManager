@@ -51,7 +51,7 @@ class UserControllerTest {
     void shouldHandleGetCall(String segment) throws Exception {
         when(userUseCase.getAll()).thenReturn(List.of(TMUser.builder().build()));
 
-        this.mockMvc.perform(get("/taskmanager/" + segment))
+        this.mockMvc.perform(get("/task-manager/" + segment))
                 .andDo(print()).andExpect(status().isOk())
                 .andExpect(view().name("listOfUsers"))
                 .andExpect(model().attributeExists("users"));
@@ -61,7 +61,7 @@ class UserControllerTest {
     @Test
     @DisplayName("Should call the get API to add User Form")
     void shouldHandlePostCall() throws Exception {
-        this.mockMvc.perform(get("/taskmanager/add-userform"))
+        this.mockMvc.perform(get("/task-manager/add-userform"))
                 .andDo(print()).andExpect(status().isOk())
                 .andExpect(view().name("addUserForm"));
     }
@@ -72,7 +72,7 @@ class UserControllerTest {
         var id = "42";
         when(userInputPort.deleteById(id)).thenReturn(true);
 
-        this.mockMvc.perform(get("/taskmanager/delete-user")
+        this.mockMvc.perform(get("/task-manager/delete-user")
                         .param("id", id))
                 .andDo(print()).andExpect(status().isOk())
                 .andExpect(view().name("listOfUsers"))
