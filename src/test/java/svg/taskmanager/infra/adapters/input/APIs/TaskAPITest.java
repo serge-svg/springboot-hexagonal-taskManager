@@ -1,11 +1,16 @@
 package svg.taskmanager.infra.adapters.input.APIs;
 
+
+import org.apache.commons.lang3.RandomStringUtils;
+
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
@@ -39,8 +44,11 @@ class TaskAPITest {
         @Autowired
         private TestRestTemplate testRestTemplate;
 
+        @InjectMocks
+        private TaskAPI taskAPI;
+
         @Test
-        @DisplayName("Should call the getall API method and return a list of task")
+        @DisplayName("Should call the getall taskAPI method and return a list of task")
         void getAll() {
                 var task = TMTask.builder()
                                 .id("001")
@@ -70,7 +78,7 @@ class TaskAPITest {
         }
 
         @Test
-        @DisplayName("Should call the getbyid API method and return a concrete task")
+        @DisplayName("Should call the getbyid taskAPI method and return a concrete task")
         void getById() {
                 var task = TMTask.builder()
                                 .id("001")
@@ -94,12 +102,13 @@ class TaskAPITest {
                                 HttpMethod.GET,
                                 null,
                                 new ParameterizedTypeReference<>() {});
+
                 Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
                 Assertions.assertThat(response.getBody()).isEqualTo(task);                
         }
 
         @Test
-        @DisplayName("Should call the getbyuserid and return a concrete list of tasks")
+        @DisplayName("Should call the getbyuserid taskAPI method and return a concrete list of tasks")
         void getByUserId() {
                 var task1 = TMTask.builder()
                         .id("001")
@@ -135,4 +144,80 @@ class TaskAPITest {
                 Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
                 Assertions.assertThat(response.getBody()).contains(task1, task2);
         }
+
+        @Test
+        @DisplayName("Should call the create method taskAPI and return true")
+        void create() {
+                Mockito.when(entityRepository.save(TMTask.class)).thenReturn(true);
+
+                var url = UriComponentsBuilder.newInstance()
+                        .scheme("http")
+                        .host("localhost")
+                        .port(port)
+                        .path("/webapi/task-manager/tasks")
+                        .path("/create")
+                        .queryParam("userId", "11122233A")
+                        .queryParam("title", "Increase resources")
+                        .queryParam("description", "Increase memory")
+                        .toUriString();
+
+                ResponseEntity<Object> response = testRestTemplate.exchange(url,
+                        HttpMethod.POST,
+                        null,
+                        new ParameterizedTypeReference<>() {
+                        });
+
+                Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        }
+
+        @Test
+        @DisplayName("Should call the update taskAPI method and return true")
+        void update() {
+                Mockito.when(entityRepository.update(TMTask.class)).thenReturn(true);
+
+                var url = UriComponentsBuilder.newInstance()
+                        .scheme("http")
+                        .host("localhost")
+                        .port(port)
+                        .path("/webapi/task-manager/tasks")
+                        .path("/update")
+                        .queryParam("id", "001")
+                        .queryParam("userId", "11122233A")
+                        .queryParam("title", "Increase resources")
+                        .queryParam("description", "Increase memory updated")
+                        .toUriString();
+
+                ResponseEntity<Object> response = testRestTemplate.exchange(url,
+                        HttpMethod.PUT,
+                        null,
+                        new ParameterizedTypeReference<>() {
+                        });
+
+                Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        }
+
+        @Test
+        @DisplayName("Should call the delete taskAPI method and return true")
+        void delete() {
+                Mockito.when(entityRepository.save(TMTask.class)).thenReturn(true);
+
+                var url = UriComponentsBuilder.newInstance()
+                        .scheme("http")
+                        .host("localhost")
+                        .port(port)
+                        .path("/webapi/task-manager/tasks")
+                        .path("/delete")
+                        .queryParam("id", "001")
+                        .toUriString();
+
+                ResponseEntity<Object> response = testRestTemplate.exchange(url,
+                        HttpMethod.DELETE,
+                        null,
+                        new ParameterizedTypeReference<>() {
+                        });
+
+                Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        }
+
+
 }
