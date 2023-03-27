@@ -27,12 +27,9 @@ import org.springframework.web.util.UriComponentsBuilder;
 import svg.taskmanager.domain.TMTask;
 import svg.taskmanager.infra.ports.output.EntityRepository;
 
-import java.io.IOException;
-import java.net.http.HttpResponse;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ExtendWith(MockitoExtension.class)
@@ -51,7 +48,7 @@ class TaskAPITest {
         private TaskAPI taskAPI;
 
         @Test
-        @DisplayName("Should call the getall API method and return a list of task")
+        @DisplayName("Should call the getall taskAPI method and return a list of task")
         void getAll() {
                 var task = TMTask.builder()
                                 .id("001")
@@ -61,8 +58,6 @@ class TaskAPITest {
                                 .build();
 
                 Mockito.when(entityRepository.getAll(any())).thenReturn(List.of(task));
-                // Luiz
-                //Mockito.when(taskAPI.getAll()).thenReturn(List.of(task));
 
                 var url = UriComponentsBuilder.newInstance()
                                 .scheme("http")
@@ -83,7 +78,7 @@ class TaskAPITest {
         }
 
         @Test
-        @DisplayName("Should call the getbyid API method and return a concrete task")
+        @DisplayName("Should call the getbyid taskAPI method and return a concrete task")
         void getById() {
                 var task = TMTask.builder()
                                 .id("001")
@@ -113,7 +108,7 @@ class TaskAPITest {
         }
 
         @Test
-        @DisplayName("Should call the getbyuserid API method and return a concrete list of tasks")
+        @DisplayName("Should call the getbyuserid taskAPI method and return a concrete list of tasks")
         void getByUserId() {
                 var task1 = TMTask.builder()
                         .id("001")
@@ -151,7 +146,7 @@ class TaskAPITest {
         }
 
         @Test
-        @DisplayName("Should call the create method API and return true")
+        @DisplayName("Should call the create method taskAPI and return true")
         void create() {
                 Mockito.when(entityRepository.save(TMTask.class)).thenReturn(true);
 
@@ -176,7 +171,7 @@ class TaskAPITest {
         }
 
         @Test
-        @DisplayName("Should call the update API method and return true")
+        @DisplayName("Should call the update taskAPI method and return true")
         void update() {
                 Mockito.when(entityRepository.update(TMTask.class)).thenReturn(true);
 
@@ -202,7 +197,7 @@ class TaskAPITest {
         }
 
         @Test
-        @DisplayName("Should call the delete API method and return true")
+        @DisplayName("Should call the delete taskAPI method and return true")
         void delete() {
                 Mockito.when(entityRepository.save(TMTask.class)).thenReturn(true);
 
