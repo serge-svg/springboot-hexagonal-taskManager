@@ -61,7 +61,7 @@ class UserAPITest {
                 .andReturn().getResponse();
 
         assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
-        assertThat(response.getContentAsString()).contains("email@email.co");
+        assertThat(response.getContentAsString()).contains("luiz@codemaster.com");
     }
 
     @Test
