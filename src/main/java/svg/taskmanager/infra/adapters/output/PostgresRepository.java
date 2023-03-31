@@ -109,14 +109,13 @@ public class PostgresRepository implements EntityRepository {
             e.printStackTrace();
         }
 
-        StringBuilder sql = new StringBuilder();
-        sql.append("INSERT INTO ")
-                .append(reg.getClass().getSimpleName())
-                .append("(").append(String.join(",", fields)).append(")")
-                .append(" VALUES ")
-                .append("(").append(String.join(",", Collections.nCopies(fields.length, "?"))).append(")");
+        String sql = "INSERT INTO " +
+                reg.getClass().getSimpleName() +
+                "(" + String.join(",", fields) + ")" +
+                " VALUES " +
+                "(" + String.join(",", Collections.nCopies(fields.length, "?")) + ")";
 
-        return jdbcTemplate.update(sql.toString(), fieldValues) == 1;
+        return jdbcTemplate.update(sql, fieldValues) == 1;
     }
 
     @Override
@@ -155,7 +154,7 @@ public class PostgresRepository implements EntityRepository {
         return jdbcTemplate.update(sql.toString()) == 1;
     }    
 
-    private class LombokRowMapper<T> implements RowMapper<T> {
+    private static class LombokRowMapper<T> implements RowMapper<T> {
         private Class<?> clazz = null;
         public LombokRowMapper(Class<?> clazz) {
             this.clazz = clazz;
@@ -165,22 +164,20 @@ public class PostgresRepository implements EntityRepository {
         public T mapRow(ResultSet rs, int rowNum) throws SQLException {
             try {
                 Method builderMethod = clazz.getMethod("builder");
-                if (builderMethod == null){
-                    return null;
-                }                
-                Object row = builderMethod.invoke(null);
-                Method[] m = row.getClass().getDeclaredMethods();
 
-                for (int i = 0; i < m.length; i++) {
+                Object row = builderMethod.invoke(null);
+                Method[] methods = row.getClass().getDeclaredMethods();
+
+                for(Method method: methods) {
                     int pos = -1;
 
                     try {
-                        pos = rs.findColumn(m[i].getName());
+                        pos = rs.findColumn(method.getName());
                     } catch (SQLException ex) { }
 
                     if (pos != -1) {
                         Object fieldValue = rs.getObject(pos);
-                        m[i].invoke(row, fieldValue);
+                        method.invoke(row, fieldValue);
                     }
                 }
 

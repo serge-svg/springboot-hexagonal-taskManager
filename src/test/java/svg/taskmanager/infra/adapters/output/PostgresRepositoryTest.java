@@ -33,7 +33,7 @@ public class PostgresRepositoryTest {
     PostgresRepository postgresRepository;
 
     @Container
-    static final PostgreSQLContainer<?> postgreSQL = (PostgreSQLContainer<?>) new PostgreSQLContainer<>(
+    static final PostgreSQLContainer<?> postgreSQL = new PostgreSQLContainer<>(
             "postgres:13.2-alpine")
             .withDatabaseName("taskManagerdb")
             .withUsername("postgres")
@@ -56,8 +56,8 @@ public class PostgresRepositoryTest {
     
     private TMTask task;
     private final String USER_ID = "11122233A";
-    private final String TITLE = "Task1";
-    private final String DESCRIPTION = "Task1 for user1...";
+    private final String TITLE = "Task title";
+    private final String DESCRIPTION = "Random task ...";
 
     @BeforeEach
     void setUp() {        
@@ -123,7 +123,7 @@ public class PostgresRepositoryTest {
     }
 
     @Test
-    void should_find_all_created_usesr() {
+    void should_find_all_created_users() {
         postgresRepository.save(user);
         List<TMUser> savedUser = postgresRepository.getAll(TMUser.class);
 
