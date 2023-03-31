@@ -54,7 +54,7 @@ class UserAPITest {
                 .email("luiz@codemaster.com")
                 .build());
 
-        Mockito.when(userAPI.getAll()).thenReturn(users);
+        Mockito.when(userInputPort.getAll()).thenReturn(users);
 
         MockHttpServletResponse response = mockMvc.perform(get("/webapi/task-manager/users/getall")
                         .accept(MediaType.APPLICATION_JSON))
@@ -74,7 +74,7 @@ class UserAPITest {
                 .email("email@email.co")
                 .build();
 
-        Mockito.when(userAPI.getById("001")).thenReturn(user);
+        Mockito.when(userInputPort.getById("001")).thenReturn(user);
 
         MockHttpServletResponse response = mockMvc.perform(get("/webapi/task-manager/users/getbyid?id=001")
                         .accept(MediaType.APPLICATION_JSON))
@@ -93,7 +93,7 @@ class UserAPITest {
                 .email("email@email.co")
                 .build();
 
-        Mockito.when(userAPI.getByNationalId("11122233A")).thenReturn(user);
+        Mockito.when(userInputPort.getByNationalId("11122233A")).thenReturn(user);
 
         MockHttpServletResponse response = mockMvc.perform(get("/webapi/task-manager/users/getbynationalid?nationalId=11122233A")
                         .accept(MediaType.APPLICATION_JSON))
@@ -113,7 +113,7 @@ class UserAPITest {
                 .email("luiz@codemaster.com")
                 .build());
 
-        Mockito.when(userAPI.getByName("Luiz")).thenReturn(users);
+        Mockito.when(userInputPort.getByName("Luiz")).thenReturn(users);
 
         MockHttpServletResponse response = mockMvc.perform(get("/webapi/task-manager/users/getbyname?name=Luiz")
                         .accept(MediaType.APPLICATION_JSON))
@@ -126,35 +126,38 @@ class UserAPITest {
     @DisplayName("Should call the create userAPI method and return a status 200")
     void create() throws Exception {
 
-        Mockito.when(userAPI.create("11122233A", "user1", "user1@codemaster.com")).thenReturn(true);
+        Mockito.when(userInputPort.create("11122233A", "user1", "user1@codemaster.com")).thenReturn(true);
 
         MockHttpServletResponse response = mockMvc.perform(MockMvcRequestBuilders.post("/webapi/task-manager/users/create?nationalId=11122233A&name=user1&email=user1@codemaster.com"))
                 .andReturn().getResponse();
 
         assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
+        assertThat(response.getContentAsString()).isEqualTo("true");
     }
 
     @Test
     @DisplayName("Should call the update userAPI method and return a status 200")
     void update() throws Exception {
 
-        Mockito.when(userAPI.update("001","11122233A", "user1", "user1@codemaster.com")).thenReturn(true);
+        Mockito.when(userInputPort.update("001","11122233A", "user1", "user1@codemaster.com")).thenReturn(true);
 
         MockHttpServletResponse response = mockMvc.perform(MockMvcRequestBuilders.put("/webapi/task-manager/users/update?id=001&nationalId=11122233A&name=user1&email=user1@codemaster.com"))
                 .andReturn().getResponse();
 
         assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
+        assertThat(response.getContentAsString()).isEqualTo("true");
     }
 
     @Test
     @DisplayName("Should call the delete userAPI method and return a status 200")
     void delete() throws Exception {
 
-        Mockito.when(userAPI.deleteById("001")).thenReturn(true);
+        Mockito.when(userInputPort.deleteById("001")).thenReturn(true);
 
         MockHttpServletResponse response = mockMvc.perform(MockMvcRequestBuilders.delete("/webapi/task-manager/users/delete?id=001"))
                 .andReturn().getResponse();
 
         assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
+        assertThat(response.getContentAsString()).isEqualTo("true");
     }
 }
