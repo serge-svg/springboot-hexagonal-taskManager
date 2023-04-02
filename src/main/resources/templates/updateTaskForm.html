@@ -10,7 +10,7 @@
 	<div class="container">
 		<h3>Update Task</h3>
 		<hr/>
-		<form th:action="update-task" th:object="${task}" method="post">
+		<form th:action="update-task" th:object="${task}" th:method="put">
 		
 			<input type="hidden" name="id" th:field="*{id}" readonly="readonly">
 			

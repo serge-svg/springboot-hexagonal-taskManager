@@ -23,10 +23,12 @@
 				<td th:text="${user.nationalId}"></td>
 				<td th:text="${user.name}"></td>
 				<td th:text="${user.email}"></td>
-				<td>
+				<td style="display: flex;gap: 1rem">
 					<a th:href="@{/task-manager/tasks/user-tasks(userId=${user.nationalId})}" class="btn btn-info">Tasks</a>
 					<a th:href="@{/task-manager/update-userform(id=${user.id})}" class="btn btn-info">Update</a>
-					<a th:href="@{/task-manager/delete-user(id=${user.id})}" class="btn btn-danger">Delete</a>
+					<form th:action="@{/task-manager/delete-user(id=${user.id})}" th:method="delete">
+						<button class="btn btn-danger">Delete</button>
+					</form>
 				</td>
 		    </tr>
 		</tbody>
