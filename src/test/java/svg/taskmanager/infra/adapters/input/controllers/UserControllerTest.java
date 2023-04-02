@@ -14,6 +14,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import svg.taskmanager.application.UserUseCase;
 import svg.taskmanager.domain.TMUser;
+import svg.taskmanager.infra.adapters.input.controllers.users.UserGetController;
 import svg.taskmanager.infra.ports.input.UserInputPort;
 
 import java.util.List;
@@ -24,7 +25,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest
-@ContextConfiguration(classes = UserController.class)
+@ContextConfiguration(classes = UserGetController.class)
 class UserControllerTest {
 
     @Autowired
