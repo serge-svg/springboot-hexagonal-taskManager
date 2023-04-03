@@ -24,9 +24,11 @@
 					<td th:text="${task.userId}"></td>
 					<td th:text="${task.title}"></td>
 					<td th:text="${task.description}"></td>
-					<td>
+					<td style="display: flex;gap: 1rem">
 						<a th:href="@{update-taskform(id=${task.id}, userId=${task.userId})}" class="btn btn-info">Update</a>
-						<a th:href="@{delete-task(id=${task.id}, userId=${task.userId})}" class="btn btn-danger">Delete</a>
+						<form th:action="@{delete-task(id=${task.id}, userId=${task.userId})}" th:method="delete">
+							<button class="btn btn-danger">Delete</button>
+						</form>
 					</td>
 			    </tr>
 			</tbody>
