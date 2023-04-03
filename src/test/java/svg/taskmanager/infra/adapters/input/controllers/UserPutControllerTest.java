@@ -27,12 +27,7 @@ class UserPutControllerTest {
 
     @MockBean
     private UserInputPort userInputPort;
-/*
-    @BeforeEach
-    void setUp() {
-        MockitoAnnotations.openMocks(this);
-    }
-*/
+
     @Test
     @DisplayName("Should call the update controller method to update a user")
     void shouldHandlePostCall() throws Exception {
