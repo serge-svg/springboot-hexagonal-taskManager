@@ -5,14 +5,12 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
-import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
-import svg.taskmanager.application.UserUseCase;
 import svg.taskmanager.domain.TMUser;
 import svg.taskmanager.infra.adapters.input.controllers.users.UserGetController;
 import svg.taskmanager.infra.ports.input.UserInputPort;
@@ -26,13 +24,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest
 @ContextConfiguration(classes = UserGetController.class)
-class UserControllerTest {
+class UserGetControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
-
-    @Mock
-    private UserUseCase userUseCase;
 
     @MockBean
     private UserInputPort userInputPort;
@@ -48,35 +43,35 @@ class UserControllerTest {
             "/",
             "/users"
     })
-    @DisplayName("Should call the get API")
-    void shouldHandleGetCall(String segment) throws Exception {
-        when(userUseCase.getAll()).thenReturn(List.of(TMUser.builder().build()));
+    @DisplayName("Should call the getAll controller method to return all the users")
+    void shouldHandleGetAllCall(String segment) throws Exception {
+        when(userInputPort.getAll()).thenReturn(List.of(TMUser.builder().build()));
 
         this.mockMvc.perform(get("/task-manager/" + segment))
                 .andDo(print()).andExpect(status().isOk())
                 .andExpect(view().name("listOfUsers"))
                 .andExpect(model().attributeExists("users"));
-
     }
 
     @Test
-    @DisplayName("Should call the get API to add User Form")
-    void shouldHandlePostCall() throws Exception {
+    @DisplayName("Should call the addForm controller method to show the addUserForm")
+    void shouldHandleGetAddFormCall() throws Exception {
         this.mockMvc.perform(get("/task-manager/add-userform"))
                 .andDo(print()).andExpect(status().isOk())
                 .andExpect(view().name("addUserForm"));
     }
 
     @Test
-    @DisplayName("Should call the get API to delete a User")
-    void shouldHandleDeleteMethod() throws Exception {
-        var id = "42";
-        when(userInputPort.deleteById(id)).thenReturn(true);
+    @DisplayName("Should call the updateForm controller method to show the updateUserForm")
+    void shouldHandleGetUpdateFormCall() throws Exception {
+        var id = "01";
+        when(userInputPort.getById(id)).thenReturn(TMUser.builder().build());
 
-        this.mockMvc.perform(get("/task-manager/delete-user")
-                        .param("id", id))
+        this.mockMvc.perform(get("/task-manager/update-userform")
+                    .param("id", id))
                 .andDo(print()).andExpect(status().isOk())
-                .andExpect(view().name("listOfUsers"))
-                .andExpect(model().attributeExists("users"));
+                .andExpect(view().name("updateUserForm"))
+                .andExpect(model().attributeExists("user"));;
     }
+
 }
